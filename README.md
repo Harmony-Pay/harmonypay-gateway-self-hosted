@@ -20,7 +20,7 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Recei
 - Use any crypto wallet you want
 - Automagically detect unique payments using one wallet address
 - Hierarchically deterministic (HD) wallet support
-- 1-Click payment buttons, MetaMask, Waves Client, etc.
+- 1-Click payment buttons, MetaMask, One Wallet, etc.
 - Fiat autosettlement enables you to connect to exchange(s) and instantly convert selected coins to fiat or stablecoins
 - Donations widget shortcode generator
 - Tor support

@@ -14,8 +14,6 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Accep
 
 Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Receive coins directly into the wallet of your choice.
 
-https://www.youtube.com/watch?v=nUoJ9ziaAJQ
-
 = Key Features & Highlights =
 
 - 0% transaction fees
@@ -30,7 +28,7 @@ https://www.youtube.com/watch?v=nUoJ9ziaAJQ
 - Donations widget shortcode generator
 - Tor support
 - 0-conf (mempool) support for some coins
-- Take MCC for a test ride by visiting our <a href="https://harmonypay.open4g.com/">Demo Store</a>
+- Take MCC for a test ride by visiting our <a href="https://harmonypay.swaps.vision/">Demo Store</a>
 
 
 = eCommerce platforms supported =

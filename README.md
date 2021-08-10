@@ -12,6 +12,8 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Recei
 
 ![Harmony ONE Payment Gateway](docs/draft_dashboard.png)
 
+![Harmony ONE Payment Gateway](docs/draft_coins_manager.png)
+
 ### Key Features & Highlights
 
 - 0% transaction fees
@@ -27,8 +29,6 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Recei
 - Tor support
 - 0-conf (mempool) support for some coins
 - Take MCC for a test ride by visiting our <a href="https://harmonypay.swaps.vision/">Demo Store</a>
-
-![Harmony ONE Payment Gateway](docs/draft_coins_manager.png)
 
 ### eCommerce platforms supported
 

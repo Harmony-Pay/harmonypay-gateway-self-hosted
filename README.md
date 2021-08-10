@@ -10,6 +10,7 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Accep
 
 Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Receive coins directly into the wallet of your choice.
 
+![Harmony ONE Payment Gateway](docs/draft_dashboard.png)
 
 ### Key Features & Highlights
 
@@ -27,6 +28,7 @@ Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Recei
 - 0-conf (mempool) support for some coins
 - Take MCC for a test ride by visiting our <a href="https://harmonypay.swaps.vision/">Demo Store</a>
 
+![Harmony ONE Payment Gateway](docs/draft_coins_manager.png)
 
 ### eCommerce platforms supported
 

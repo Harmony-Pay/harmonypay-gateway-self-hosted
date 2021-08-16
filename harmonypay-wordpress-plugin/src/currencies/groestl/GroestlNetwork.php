@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies\groestl;
+namespace harmonypay\currencies\groestl;
 
 use BitWasp\Bitcoin\Network\Network;
 use BitWasp\Bitcoin\Script\ScriptType;

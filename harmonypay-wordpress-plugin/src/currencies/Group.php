@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 /**
 	@brief		This is a currency group.

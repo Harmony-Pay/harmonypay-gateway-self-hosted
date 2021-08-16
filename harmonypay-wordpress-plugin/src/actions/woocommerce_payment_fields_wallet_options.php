@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\actions;
+namespace harmonypay\actions;
 
 /**
 	@brief		Modify the wallet options, adding or removing currencies.

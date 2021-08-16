@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 use Exception;
 
@@ -35,22 +35,22 @@ trait autosettlement_trait
 		$table->bulk_actions()
 			->form( $form )
 			// Bulk action for autosettlement settings
-			->add( __( 'Delete', 'mycryptocheckout' ), 'delete' )
+			->add( __( 'Delete', 'harmonypay' ), 'delete' )
 			// Bulk action for autosettlement settings
-			->add( __( 'Disable', 'mycryptocheckout' ), 'disable' )
+			->add( __( 'Disable', 'harmonypay' ), 'disable' )
 			// Bulk action for autosettlement settings
-			->add( __( 'Enable', 'mycryptocheckout' ), 'enable' )
+			->add( __( 'Enable', 'harmonypay' ), 'enable' )
 			// Bulk action for autosettlement settings
-			->add( __( 'Test', 'mycryptocheckout' ), 'test' )
+			->add( __( 'Test', 'harmonypay' ), 'test' )
 			;
 
 		// Assemble the autosettlements
 		$row = $table->head()->row();
 		$table->bulk_actions()->cb( $row );
 		// Table column name
-		$row->th( 'type' )->text( __( 'Type', 'mycryptocheckout' ) );
+		$row->th( 'type' )->text( __( 'Type', 'harmonypay' ) );
 		// Table column name
-		$row->th( 'details' )->text( __( 'Details', 'mycryptocheckout' ) );
+		$row->th( 'details' )->text( __( 'Details', 'harmonypay' ) );
 
 		$autosettlements = $this->autosettlements();
 
@@ -67,7 +67,7 @@ trait autosettlement_trait
 			] );
 			$url = sprintf( '<a href="%s" title="%s">%s</a>',
 				$url,
-				__( 'Edit this autosettlement', 'mycryptocheckout' ),
+				__( 'Edit this autosettlement', 'harmonypay' ),
 				$autosettlements->get_types_as_options()[ $autosettlement->get_type() ]
 			);
 			$row->td( 'type' )->text( $url );
@@ -80,17 +80,17 @@ trait autosettlement_trait
 
 		$fs = $form->fieldset( 'fs_add_new' );
 		// Fieldset legend
-		$fs->legend->label( __( 'Add new autosettlement', 'mycryptocheckout' ) );
+		$fs->legend->label( __( 'Add new autosettlement', 'harmonypay' ) );
 
 		$autosettlement_type = $fs->select( 'autosettlement_type' )
 			->css_class( 'autosettlement_type' )
-			->description( __( 'Which type of autosettlement do you wish to add?', 'mycryptocheckout' ) )
+			->description( __( 'Which type of autosettlement do you wish to add?', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Type', 'mycryptocheckout' ) )
+			->label( __( 'Type', 'harmonypay' ) )
 			->opts( $autosettlements->get_types_as_options() );
 
 		$save = $form->primary_button( 'save' )
-			->value( __( 'Save settings', 'mycryptocheckout' ) );
+			->value( __( 'Save settings', 'harmonypay' ) );
 
 		if ( $form->is_posting() )
 		{
@@ -108,7 +108,7 @@ trait autosettlement_trait
 						foreach( $ids as $id )
 							$autosettlements->forget( $id );
 						$autosettlements->save();
-						$r .= $this->info_message_box()->_( __( 'The selected wallets have been deleted.', 'mycryptocheckout' ) );
+						$r .= $this->info_message_box()->_( __( 'The selected wallets have been deleted.', 'harmonypay' ) );
 					break;
 					case 'disable':
 						foreach( $ids as $id )
@@ -117,7 +117,7 @@ trait autosettlement_trait
 							$autosettlement->set_enabled( false );
 						}
 						$autosettlements->save();
-						$r .= $this->info_message_box()->_( __( 'The selected wallets have been disabled.', 'mycryptocheckout' ) );
+						$r .= $this->info_message_box()->_( __( 'The selected wallets have been disabled.', 'harmonypay' ) );
 					break;
 					case 'enable':
 						foreach( $ids as $id )
@@ -126,7 +126,7 @@ trait autosettlement_trait
 							$autosettlement->set_enabled( true );
 						}
 						$autosettlements->save();
-						$r .= $this->info_message_box()->_( __( 'The selected wallets have been enabled.', 'mycryptocheckout' ) );
+						$r .= $this->info_message_box()->_( __( 'The selected wallets have been enabled.', 'harmonypay' ) );
 					break;
 					case 'test':
 						foreach( $ids as $id )
@@ -158,7 +158,7 @@ trait autosettlement_trait
 					$index = $autosettlements->add( $autosettlement );
 					$autosettlements->save();
 
-					$r .= $this->info_message_box()->_( __( 'Settings saved!', 'mycryptocheckout' ) );
+					$r .= $this->info_message_box()->_( __( 'Settings saved!', 'harmonypay' ) );
 					$reshow = true;
 				}
 				catch ( Exception $e )
@@ -177,18 +177,18 @@ trait autosettlement_trait
 			}
 		}
 
-		$r .= wpautop( __( 'The table below shows the autosettlements that have been set up. To edit an autosettlement, click the type.', 'mycryptocheckout' ) );
+		$r .= wpautop( __( 'The table below shows the autosettlements that have been set up. To edit an autosettlement, click the type.', 'harmonypay' ) );
 
 		$autosettlement_text = sprintf(
 			// perhaps <a>we can ...you</a>
-			__( "Read the full %sfiat autosettlement documentation%s to learn more about this feature.", 'mycryptocheckout' ),
-			'<a href="https://mycryptocheckout.com/doc/autosettlements/" target="_blank">',
+			__( "Read the full %sfiat autosettlement documentation%s to learn more about this feature.", 'harmonypay' ),
+			'<a href="https://harmonypay.com/doc/autosettlements/" target="_blank">',
 			'</a>'
 		);
 
 		$r .= wpautop( $autosettlement_text );
 
-		$r .= $this->h2( __( 'Autosettlements', 'mycryptocheckout' ) );
+		$r .= $this->h2( __( 'Autosettlements', 'harmonypay' ) );
 
 		$r .= $form->open_tag();
 		$r .= $table;
@@ -225,30 +225,30 @@ trait autosettlement_trait
 					->value( 'Your Crypto.com balance will be checked every few minutes for an hour after a payment is detected for selected coins. If you have more than the minimum trade size, it will be market sold into the autosettlement currency of your choice.' );
 
 				$form->markup( 'm_cryptocom_api' )
-					->value( 'See how to <a href="https://mycryptocheckout.com/doc/cryptocom/">get Crypto.com API keys</a> and set permissions.' );
+					->value( 'See how to <a href="https://harmonypay.com/doc/cryptocom/">get Crypto.com API keys</a> and set permissions.' );
 
 				$cryptocom_api_key = $form->text( 'cryptocom_api_key' )
-					->description( __( 'The API key of your Crypto.com account.', 'mycryptocheckout' ) )
+					->description( __( 'The API key of your Crypto.com account.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Crypto.com API key', 'mycryptocheckout' ) )
+					->label( __( 'Crypto.com API key', 'harmonypay' ) )
 					->size( 32 )
 					->maxlength( 64 )
 					->trim()
 					->value( $autosettlement->get( 'cryptocom_api_key' ) );
 				$cryptocom_api_secret = $form->text( 'cryptocom_api_secret' )
-					->description( __( 'The secret text associated to this API key.', 'mycryptocheckout' ) )
+					->description( __( 'The secret text associated to this API key.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Crypto.com secret', 'mycryptocheckout' ) )
+					->label( __( 'Crypto.com secret', 'harmonypay' ) )
 					->size( 32 )
 					->maxlength( 64 )
 					->trim()
 					->value( $autosettlement->get( 'cryptocom_api_secret' ) );
 				$cryptocom_settlement_currency = $form->select( 'cryptocom_settlement_currency' )
-					->description( __( 'The currency you wish to settle to.', 'mycryptocheckout' ) )
-					->label( __( 'Autosettlement currency', 'mycryptocheckout' ) )
-					->opt( 'USDC', 'USDC - USD Coin' )
+					->description( __( 'The currency you wish to settle to.', 'harmonypay' ) )
+					->label( __( 'Autosettlement currency', 'harmonypay' ) )
+					//->opt( 'USDC', 'USDC - USD Coin' )
 					->opt( 'USDT', 'USDT - Tether' )
-					->opt( 'TUSD', 'TUSD - TrueUSD' )
+					//->opt( 'TUSD', 'TUSD - TrueUSD' )
 					->value( $autosettlement->get( 'cryptocom_settlement_currency', 'USDT' ) );
 				break;			
 			case 'binance':
@@ -256,30 +256,30 @@ trait autosettlement_trait
 					->value( 'Your Binance balance will be checked every few minutes for an hour after a payment is detected for selected coins. If you have more than the minimum trade size, it will be market sold into the autosettlement currency of your choice.' );
 
 				$form->markup( 'm_binance_api' )
-					->value( 'See how to <a href="https://mycryptocheckout.com/doc/binance/">get Binance API keys</a> and set permissions.' );
+					->value( 'See how to <a href="https://harmonypay.com/doc/binance/">get Binance API keys</a> and set permissions.' );
 
 				$binance_api_key = $form->text( 'binance_api_key' )
-					->description( __( 'The API key of your Binance account.', 'mycryptocheckout' ) )
+					->description( __( 'The API key of your Binance account.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Binance API key', 'mycryptocheckout' ) )
+					->label( __( 'Binance API key', 'harmonypay' ) )
 					->size( 32 )
 					->maxlength( 64 )
 					->trim()
 					->value( $autosettlement->get( 'binance_api_key' ) );
 				$binance_api_secret = $form->text( 'binance_api_secret' )
-					->description( __( 'The secret text associated to this API key.', 'mycryptocheckout' ) )
+					->description( __( 'The secret text associated to this API key.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Binance secret', 'mycryptocheckout' ) )
+					->label( __( 'Binance secret', 'harmonypay' ) )
 					->size( 32 )
 					->maxlength( 64 )
 					->trim()
 					->value( $autosettlement->get( 'binance_api_secret' ) );
 				$binance_settlement_currency = $form->select( 'binance_settlement_currency' )
-					->description( __( 'The currency you wish to settle to.', 'mycryptocheckout' ) )
-					->label( __( 'Autosettlement currency', 'mycryptocheckout' ) )
-					->opt( 'USDC', 'USDC - USD Coin' )
+					->description( __( 'The currency you wish to settle to.', 'harmonypay' ) )
+					->label( __( 'Autosettlement currency', 'harmonypay' ) )
+					//->opt( 'USDC', 'USDC - USD Coin' )
 					->opt( 'USDT', 'USDT - Tether' )
-					->opt( 'TUSD', 'TUSD - TrueUSD' )
+					->opt( 'BUSD', 'BUSD - Binance USD' )
 					->value( $autosettlement->get( 'binance_settlement_currency', 'USDT' ) );
 				break;
 			case 'bittrex':
@@ -287,26 +287,26 @@ trait autosettlement_trait
 					->value( 'Your Bittrex balance will be checked every few minutes for an hour after a payment is detected for selected coins. If you have more than the minimum trade size, it will be market sold into the autosettlement currency of your choice.' );
 
 				$form->markup( 'm_bittrex_api' )
-					->value( 'See how to <a href="https://mycryptocheckout.com/doc/autosettlements/bittrex/">get Bittrex API keys</a> and set permissions.' );
+					->value( 'See how to <a href="https://harmonypay.com/doc/autosettlements/bittrex/">get Bittrex API keys</a> and set permissions.' );
 
 				$bittrex_api_key = $form->text( 'bittrex_api_key' )
-					->description( __( 'The limited API key of your Bittrex account.', 'mycryptocheckout' ) )
+					->description( __( 'The limited API key of your Bittrex account.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Bittrex API key', 'mycryptocheckout' ) )
+					->label( __( 'Bittrex API key', 'harmonypay' ) )
 					->size( 32 )
 					->maxlength( 32 )
 					->trim()
 					->value( $autosettlement->get( 'bittrex_api_key' ) );
 				$bittrex_api_secret = $form->text( 'bittrex_api_secret' )
-					->description( __( 'The secret text associated to this API key.', 'mycryptocheckout' ) )
+					->description( __( 'The secret text associated to this API key.', 'harmonypay' ) )
 					// Input label
-					->label( __( 'Bittrex secret', 'mycryptocheckout' ) )
+					->label( __( 'Bittrex secret', 'harmonypay' ) )
 					->size( 32 )
 					->trim()
 					->value( $autosettlement->get( 'bittrex_api_secret' ) );
 				$bittrex_settlement_currency = $form->select( 'bittrex_settlement_currency' )
-					->description( __( 'The currency you wish to settle to.', 'mycryptocheckout' ) )
-					->label( __( 'Autosettlement currency', 'mycryptocheckout' ) )
+					->description( __( 'The currency you wish to settle to.', 'harmonypay' ) )
+					->label( __( 'Autosettlement currency', 'harmonypay' ) )
 					->opt( 'USD', 'USD - US Dollars' )
 					->opt( 'USDT', 'USDT - USD Tether' )
 					->value( $autosettlement->get( 'bittrex_settlement_currency', 'USD' ) );
@@ -314,9 +314,9 @@ trait autosettlement_trait
 		}
 
 		$autosettlement_label = $form->text( 'wallet_label' )
-			->description( __( 'Describe this autosettlement to yourself.', 'mycryptocheckout' ) )
+			->description( __( 'Describe this autosettlement to yourself.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Label', 'mycryptocheckout' ) )
+			->label( __( 'Label', 'harmonypay' ) )
 			->size( 32 )
 			->stripslashes()
 			->trim()
@@ -325,12 +325,12 @@ trait autosettlement_trait
 		// Which currencies to apply this autosettlement on.
 		$fs = $form->fieldset( 'fs_currencies' );
 		// Fieldset legend
-		$fs->legend->label( __( 'Currencies', 'mycryptocheckout' ) );
+		$fs->legend->label( __( 'Currencies', 'harmonypay' ) );
 
 		$currencies_input = $fs->select( 'currencies' )
-			->description( __( 'Select the currencies to be autosettled. If no currencies are selected, these settings will be applied to all of them. Hold the ctrl or shift key to select multiple currencies.', 'mycryptocheckout' ) )
+			->description( __( 'Select the currencies to be autosettled. If no currencies are selected, these settings will be applied to all of them. Hold the ctrl or shift key to select multiple currencies.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Currencies to autosettle', 'mycryptocheckout' ) )
+			->label( __( 'Currencies to autosettle', 'harmonypay' ) )
 			->multiple()
 			->size( 20 )
 			->value( $autosettlement->get_currencies() );
@@ -340,7 +340,7 @@ trait autosettlement_trait
 			$autosettlement->add_network_fields( $form );
 
 		$save = $form->primary_button( 'save' )
-			->value( __( 'Save settings', 'mycryptocheckout' ) );
+			->value( __( 'Save settings', 'harmonypay' ) );
 
 		if ( $form->is_posting() )
 		{
@@ -389,7 +389,7 @@ trait autosettlement_trait
 
 					$autosettlements->save();
 
-					$r .= $this->info_message_box()->_( __( 'Settings saved!', 'mycryptocheckout' ) );
+					$r .= $this->info_message_box()->_( __( 'Settings saved!', 'harmonypay' ) );
 					$reshow = true;
 				}
 				catch ( Exception $e )

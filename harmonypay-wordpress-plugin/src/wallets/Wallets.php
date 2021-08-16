@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\wallets;
+namespace harmonypay\wallets;
 
 /**
 	@brief		A collection of wallets.
@@ -8,7 +8,7 @@ namespace mycryptocheckout\wallets;
 	@since		2017-12-09 09:02:26
 **/
 class Wallets
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
 	use \plainview\sdk_mcc\wordpress\object_stores\Site_Option
 	{
@@ -39,7 +39,7 @@ class Wallets
 		ksort( $currency_ids );
 
 		// ANCHOR Link to wallet configuration page. ENDANCHOR
-		return "\n\n" . sprintf( __( 'You currently have the following currencies configured: %s', 'mycryptocheckout' ),
+		return "\n\n" . sprintf( __( 'You currently have the following currencies configured: %s', 'harmonypay' ),
 			implode( ', ', $currency_ids )
 		);
 	}
@@ -63,7 +63,7 @@ class Wallets
 	**/
 	public function get_dustiest_wallet( $currency_id )
 	{
-		$dustiest_wallets = MyCryptoCheckout()->collection();
+		$dustiest_wallets = HarmonyPay()->collection();
 		$wallets = $this->enabled_on_this_site();
 		foreach( $wallets as $index => $wallet )
 			if ( $wallet->get_currency_id() == $currency_id )
@@ -78,7 +78,7 @@ class Wallets
 		$wallet = $dustiest_wallets->first();
 
 		// Allow other people to modify our selection.
-		$action = MyCryptoCheckout()->new_action( 'get_dustiest_wallet' );
+		$action = HarmonyPay()->new_action( 'get_dustiest_wallet' );
 		$action->currency_id = $currency_id;
 		$action->dustiest_wallets = $dustiest_wallets;
 		$action->wallet = $wallet;
@@ -105,7 +105,7 @@ class Wallets
 	**/
 	public function save()
 	{
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		$this->sortBy( function( $wallet )
 		use ( $currencies )
 		{
@@ -124,7 +124,7 @@ class Wallets
 	**/
 	public static function store_container()
 	{
-		return MyCryptoCheckout();
+		return HarmonyPay();
 	}
 
 	/**

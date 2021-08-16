@@ -1,1 +1,1 @@
-<div class="mcc_qr_code"></div>
+<div class="hrp_qr_code"></div>

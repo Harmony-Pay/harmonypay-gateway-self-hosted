@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies\groestl;
+namespace harmonypay\currencies\groestl;
 
 /**
 	@brief		Basically base58, but without the checksum.

@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\cli;
+namespace harmonypay\cli;
 
 use Exception;
 use WP_CLI;
@@ -34,8 +34,8 @@ class Dump_Pub
 	{
 		$currency_id = $args[ 0 ];
 		$pub = $args[ 1 ];
-		$currencies = MyCryptoCheckout()->currencies();
-		$wallets = MyCryptoCheckout()->wallets();
+		$currencies = HarmonyPay()->currencies();
+		$wallets = HarmonyPay()->wallets();
 		$currency = $currencies->get( $currency_id );
 
 		$small_pub = substr( $pub, 0, 4 );

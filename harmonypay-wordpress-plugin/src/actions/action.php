@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\actions;
+namespace harmonypay\actions;
 
 /**
 	@brief		Base action class.
@@ -15,6 +15,6 @@ class action
 	**/
 	public function get_prefix()
 	{
-		return 'mycryptocheckout_';
+		return 'harmonypay_';
 	}
 }

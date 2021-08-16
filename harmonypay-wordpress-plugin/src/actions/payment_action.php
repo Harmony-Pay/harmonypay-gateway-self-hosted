@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\actions;
+namespace harmonypay\actions;
 
 /**
 	@brief		Do something to a payment.

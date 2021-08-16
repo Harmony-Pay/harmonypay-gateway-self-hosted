@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\ecommerce;
+namespace harmonypay\ecommerce;
 
 /**
 	@brief		Base ecommerce class.
@@ -32,7 +32,7 @@ class Ecommerce
 
 		// Find the payment with this ID.
 		global $wpdb;
-		$query = sprintf( "SELECT `post_id` FROM `%s` WHERE `meta_key` = '_mcc_payment_id' AND `meta_value` = '%d'",
+		$query = sprintf( "SELECT `post_id` FROM `%s` WHERE `meta_key` = '_hrp_payment_id' AND `meta_value` = '%d'",
 			$wpdb->postmeta,
 			$payment->payment_id
 		);

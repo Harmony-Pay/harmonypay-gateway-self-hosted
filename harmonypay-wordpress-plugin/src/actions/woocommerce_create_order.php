@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\actions;
+namespace harmonypay\actions;
 
 /**
 	@brief		Action for when WooCommerce is busy creating the order.

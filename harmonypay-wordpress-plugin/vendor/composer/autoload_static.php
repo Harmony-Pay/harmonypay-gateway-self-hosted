@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3
+class ComposerStaticInitb87514d55865b752662cc0c9a7b9d526
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -18,10 +18,10 @@ class ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3
             'plainview\\sdk_mcc\\' => 18,
             'phpEther\\' => 9,
         ),
-        'm' => 
+        'h' => 
         array (
-            'mycryptocheckout\\api\\' => 21,
-            'mycryptocheckout\\' => 17,
+            'harmonypay\\api\\' => 15,
+            'harmonypay\\' => 11,
         ),
         'M' => 
         array (
@@ -53,11 +53,11 @@ class ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3
         array (
             0 => __DIR__ . '/..' . '/arizn/phpether',
         ),
-        'mycryptocheckout\\api\\' => 
+        'harmonypay\\api\\' => 
         array (
-            0 => __DIR__ . '/..' . '/mycryptocheckout/api/src',
+            0 => __DIR__ . '/..' . '/harmonypay/api/src',
         ),
-        'mycryptocheckout\\' => 
+        'harmonypay\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -108,10 +108,10 @@ class ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit9c0e5548c3c9846633d13faa7dcf3fe3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb87514d55865b752662cc0c9a7b9d526::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb87514d55865b752662cc0c9a7b9d526::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb87514d55865b752662cc0c9a7b9d526::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb87514d55865b752662cc0c9a7b9d526::$classMap;
 
         }, null, ClassLoader::class);
     }

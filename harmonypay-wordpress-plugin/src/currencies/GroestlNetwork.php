@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 use BitWasp\Bitcoin\Network\Network;
 use BitWasp\Bitcoin\Script\ScriptType;

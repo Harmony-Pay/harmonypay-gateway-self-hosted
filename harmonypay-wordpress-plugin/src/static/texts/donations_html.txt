@@ -1,4 +1,4 @@
-<div class="mycryptocheckout mcc_donations" data-mycryptocheckout_donations_data="##DATA##">
+<div class="harmonypay hrp_donations" data-harmonypay_donations_data="##DATA##">
 	<div class="currency_icons" style="display: none">
 	</div>
 	<div class="currency_selector" style="display: none">

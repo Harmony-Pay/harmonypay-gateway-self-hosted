@@ -1,8 +1,8 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
-use \Exception;
+use Exception;
 
 /**
 	@brief		Things related to donations.
@@ -10,6 +10,20 @@ use \Exception;
 **/
 trait donations_trait
 {
+
+	/**
+		@brief		Return the autosettlements collection.
+		@since		2019-02-21 19:29:10
+	**/
+	public function donations()
+	{
+		if ( isset( $this->__donations ) )
+			return $this->__donations;
+
+		$this->__donations = donations\Donations::load();
+		return $this->__donations;
+	}
+
 	/**
 		@brief		Admin donations.
 		@since		2018-05-11 23:25:31
@@ -22,74 +36,76 @@ trait donations_trait
 		$r = '';
 
 		$form->markup( 'm_donations' )
-			->markup( __( 'Use the form below to customize a shortcode that can be placed in your posts or a HTML widget.', 'mycryptocheckout' ) );
+			->markup( __( 'Use the form below to customize a shortcode that can be placed in your posts or a HTML widget.', 'harmonypay' ) );
 
 		$wallets = $this->wallets();
 		$wallets_enabled = $wallets->enabled_on_this_site();
 
+		$donations = $this->donations();
+
 		$currencies = $form->select( 'currencies' )
 			// Input description
-			->description( __( 'If no currencies are selected, all available currencies will be shown.', 'mycryptocheckout' ) )
+			->description( __( 'If no currencies are selected, all available currencies will be shown.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Show these currencies', 'mycryptocheckout' ) )
+			->label( __( 'Show these currencies', 'harmonypay' ) )
 			->multiple();
 		foreach( $wallets_enabled as $wallet )
 			$currencies->opt( $wallet->currency_id, $wallet->currency_id );
 
 		$primary_currency = $form->select( 'primary_currency' )
 			// Input description
-			->description( __( 'Preselect this currency when showing the donation data.', 'mycryptocheckout' ) )
+			->description( __( 'Preselect this currency when showing the donation data.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Primary currency', 'mycryptocheckout' ) );
-		$primary_currency->opt( 'random', __( 'Random', 'mycryptocheckout' ) );
+			->label( __( 'Primary currency', 'harmonypay' ) );
+		$primary_currency->opt( 'random', __( 'Random', 'harmonypay' ) );
 		foreach( $wallets_enabled as $wallet )
 			$primary_currency->opt( $wallet->currency_id, $wallet->currency_id );
 
 		$show_currencies_as_icons = $form->checkbox( 'show_currencies_as_icons' )
 			// Input label
-			->label( __( 'User selects currency with icons', 'mycryptocheckout' ) );
+			->label( __( 'User selects currency with icons', 'harmonypay' ) );
 
 		$show_currencies_as_select = $form->checkbox( 'show_currencies_as_select' )
 			// Input label
-			->label( __( 'User selects currency with a dropdown box', 'mycryptocheckout' ) );
+			->label( __( 'User selects currency with a dropdown box', 'harmonypay' ) );
 
 		$show_currency_as_text = $form->checkbox( 'show_currency_as_text' )
 			// Input description
-			->description( __( 'Show the name of the currently selected currency.', 'mycryptocheckout' ) )
+			->description( __( 'Show the name of the currently selected currency.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Show the currency name', 'mycryptocheckout' ) );
+			->label( __( 'Show the currency name', 'harmonypay' ) );
 
 		$qr_code_enabled = $form->checkbox( 'qr_code_enabled' )
 			// Input description
-			->description( __( 'Show a QR code for the wallet address.', 'mycryptocheckout' ) )
+			->description( __( 'Show a QR code for the wallet address.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Show QR code', 'mycryptocheckout' ) );
+			->label( __( 'Show QR code', 'harmonypay' ) );
 
 		$qr_code_max_width = $form->number( 'qr_code_max_width' )
 			// Input description
-			->description( __( 'The width is specified in pixels. The height is the same as the width.', 'mycryptocheckout' ) )
+			->description( __( 'The width is specified in pixels. The height is the same as the width.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'QR code max width', 'mycryptocheckout' ) )
+			->label( __( 'QR code max width', 'harmonypay' ) )
 			->value( 180 );
 
 		$show_address = $form->checkbox( 'show_address' )
 			// Input description
-			->description( __( 'Show the address of the wallet as a text string.', 'mycryptocheckout' ) )
+			->description( __( 'Show the address of the wallet as a text string.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Show the wallet address', 'mycryptocheckout' ) );
+			->label( __( 'Show the wallet address', 'harmonypay' ) );
 
 		$alignment = $form->select( 'alignment' )
 			// Input description
-			->description( __( 'How to align the widget on the page.', 'mycryptocheckout' ) )
+			->description( __( 'How to align the widget on the page.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Alignment', 'mycryptocheckout' ) )
-			->opt( '', __( 'None', 'mycryptocheckout' ) )
-			->opt( 'left', __( 'Left', 'mycryptocheckout' ) )
-			->opt( 'center', __( 'Center', 'mycryptocheckout' ) )
-			->opt( 'right', __( 'Right', 'mycryptocheckout' ) );
+			->label( __( 'Alignment', 'harmonypay' ) )
+			->opt( '', __( 'None', 'harmonypay' ) )
+			->opt( 'left', __( 'Left', 'harmonypay' ) )
+			->opt( 'center', __( 'Center', 'harmonypay' ) )
+			->opt( 'right', __( 'Right', 'harmonypay' ) );
 
 		$save = $form->primary_button( 'save' )
-			->value( __( 'Generate shortcode', 'mycryptocheckout' ) );
+			->value( __( 'Generate shortcode', 'harmonypay' ) );
 
 		if ( $form->is_posting() )
 		{
@@ -115,12 +131,23 @@ trait donations_trait
 						$options[ 'qr_code_max_width' ] = $qr_code_max_width->get_filtered_post_value();
 					}
 
-					$shortcode = '[mcc_donations';
+					$shortcode = '[hrp_donations';
 					foreach( $options as $key => $value )
 						$shortcode .= sprintf( ' %s="%s"', $key, str_replace( '"', '\"', $value ) );
 					$shortcode .= ']';
 
-					$r .= $this->info_message_box()->_( __( 'Your shortcode is: %s', 'mycryptocheckout' ), $shortcode );
+					$r .= $this->info_message_box()->_( __( 'Your shortcode is: %s', 'harmonypay' ), $shortcode );
+					
+					//Send donation info to the server
+					$wallets = $this->wallets();
+					$wallets_enabled = $wallets->enabled_on_this_site();
+					foreach( $wallets_enabled as $wallet ) {
+						$donation_addresses[] = $wallets->get_dustiest_wallet( $wallet->currency_id );
+					}
+					//$donation_addresses = 'TEST';
+					if ( $donation_addresses[0] )
+						$donations->generate($donation_addresses);
+
 					$reshow = true;
 				}
 				catch ( Exception $e )
@@ -143,14 +170,14 @@ trait donations_trait
 	**/
 	public function init_donations_trait()
 	{
-		$this->add_shortcode( 'mcc_donations', 'shortcode_mcc_donations' );
+		$this->add_shortcode( 'hrp_donations', 'shortcode_hrp_donations' );
 	}
 
 	/**
-		@brief		shortcode_mcc_donations
+		@brief		shortcode_hrp_donations
 		@since		2018-05-12 16:57:14
 	**/
-	public function shortcode_mcc_donations( $atts )
+	public function shortcode_hrp_donations( $atts )
 	{
 		$atts = array_merge( [
 			'currencies' => [],
@@ -251,4 +278,5 @@ trait donations_trait
 
 
 	}
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		For the handling of QR codes.
@@ -17,36 +17,36 @@ trait qr_code_trait
 	{
 		$qr_code_enabled = $form->select( 'qr_code_enabled' )
 			// Input description.
-			->description( __( 'Enable a QR code for the wallet address on the order confirmation page.', 'mycryptocheckout' ) )
+			->description( __( 'Enable a QR code for the wallet address on the order confirmation page.', 'harmonypay' ) )
 			// Input label.
-			->label( __( 'QR code status', 'mycryptocheckout' ) );
+			->label( __( 'QR code status', 'harmonypay' ) );
 
 
 		$qr_code_html = $form->textarea( 'qr_code_html' )
 			// Input description.
-			->description( __( 'This is the HTML code used to display the QR code. Leave empty to use the default value.', 'mycryptocheckout' ) )
+			->description( __( 'This is the HTML code used to display the QR code. Leave empty to use the default value.', 'harmonypay' ) )
 			// Input label.
-			->label( __( 'QR code HTML', 'mycryptocheckout' ) )
+			->label( __( 'QR code HTML', 'harmonypay' ) )
 			->rows( 5, 40 );
 
 		if ( isset( $form->form()->local_settings ) )
 		{
-			$qr_code_enabled->opt( 'enabled', __( 'Enabled', 'mycryptocheckout' ) );
-			$qr_code_enabled->opt( 'disabled', __( 'Disabled', 'mycryptocheckout' ) );
+			$qr_code_enabled->opt( 'enabled', __( 'Enabled', 'harmonypay' ) );
+			$qr_code_enabled->opt( 'disabled', __( 'Disabled', 'harmonypay' ) );
 			// Local
 			$qr_code_enabled->value( $this->get_local_option( 'qr_code_enabled' ) );
 			$qr_code_html->value( $this->get_local_global_file_option( 'qr_code_html' ) );
 
 			if ( $this->is_network )
-				$qr_code_enabled->opt( 'auto', __( 'Use network admin default', 'mycryptocheckout' ) );
+				$qr_code_enabled->opt( 'auto', __( 'Use network admin default', 'harmonypay' ) );
 		}
 		else
 		{
 			// Global
-			$qr_code_enabled->opt( 'enabled_all', __( 'Enabled on all sites', 'mycryptocheckout' ) );
-			$qr_code_enabled->opt( 'disabled_all', __( 'Disabled on all sites', 'mycryptocheckout' ) );
-			$qr_code_enabled->opt( 'default_enabled', __( 'Default enabled on all sites', 'mycryptocheckout' ) );
-			$qr_code_enabled->opt( 'default_disabled', __( 'Default disabled on all sites', 'mycryptocheckout' ) );
+			$qr_code_enabled->opt( 'enabled_all', __( 'Enabled on all sites', 'harmonypay' ) );
+			$qr_code_enabled->opt( 'disabled_all', __( 'Disabled on all sites', 'harmonypay' ) );
+			$qr_code_enabled->opt( 'default_enabled', __( 'Default enabled on all sites', 'harmonypay' ) );
+			$qr_code_enabled->opt( 'default_disabled', __( 'Default disabled on all sites', 'harmonypay' ) );
 
 			$qr_code_enabled->value( $this->get_site_option( 'qr_code_enabled' ) );
 			$qr_code_html->value( $this->get_global_file_option( 'qr_code_html' ) );
@@ -59,7 +59,7 @@ trait qr_code_trait
 	**/
 	public function qr_code_enqueue_js()
 	{
-		wp_enqueue_script( 'mcc_qrcode', MyCryptoCheckout()->paths( 'url' ) . '/src/static/js/qrcode.js', [ 'mycryptocheckout' ], MyCryptoCheckout()->plugin_version );
+		wp_enqueue_script( 'hrp_qrcode', HarmonyPay()->paths( 'url' ) . '/src/static/js/qrcode.js', [ 'harmonypay' ], HarmonyPay()->plugin_version );
 	}
 
 	/**

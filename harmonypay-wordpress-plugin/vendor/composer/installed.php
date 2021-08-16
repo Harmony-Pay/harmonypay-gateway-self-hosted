@@ -1,123 +1,122 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => NULL,
+        'name' => '__root__',
+        'dev' => true,
     ),
-    'reference' => 'a6f7d8484f33183cf20870098c4f5f8eadae1b3f',
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a6f7d8484f33183cf20870098c4f5f8eadae1b3f',
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'bitwasp/bitcoin' => array(
+            'pretty_version' => 'v0.0.35.1',
+            'version' => '0.0.35.1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bitwasp/bitcoin',
+            'aliases' => array(),
+            'reference' => '14dd3eb03165d01c5ed3bcd77cd139ed0b3449c9',
+            'dev_requirement' => false,
+        ),
+        'bitwasp/buffertools' => array(
+            'pretty_version' => 'v0.4.7',
+            'version' => '0.4.7.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bitwasp/buffertools',
+            'aliases' => array(),
+            'reference' => '9683014f59b401f6858ce069ebddc35140463fe1',
+            'dev_requirement' => false,
+        ),
+        'bitwasp/secp256k1-php' => array(
+            'pretty_version' => 'v0.1.4',
+            'version' => '0.1.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bitwasp/secp256k1-php',
+            'aliases' => array(),
+            'reference' => 'dba022a223a5b6d3480ac30f119008ef036a7e34',
+            'dev_requirement' => false,
+        ),
+        'btccom/cashaddress' => array(
+            'pretty_version' => 'v0.0.3',
+            'version' => '0.0.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../btccom/cashaddress',
+            'aliases' => array(),
+            'reference' => '29501f7875eca5325d61b4634714028db78bfc5f',
+            'dev_requirement' => false,
+        ),
+        'composer/semver' => array(
+            'pretty_version' => '1.7.2',
+            'version' => '1.7.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/./semver',
+            'aliases' => array(),
+            'reference' => '647490bbcaf7fc4891c58f47b825eb99d19c377a',
+            'dev_requirement' => false,
+        ),
+        'fgrosse/phpasn1' => array(
+            'pretty_version' => 'v1.5.4',
+            'version' => '1.5.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fgrosse/phpasn1',
+            'aliases' => array(),
+            'reference' => '4fe0afb91b4ce3ca08c63d9cf31cec1150828e97',
+            'dev_requirement' => false,
+        ),
+        'harmonypay/api' => array(
+            'pretty_version' => 'v0.3',
+            'version' => '0.3.0.0',
+            'type' => 'github',
+            'install_path' => __DIR__ . '/../harmonypay/api',
+            'aliases' => array(),
+            'reference' => '64af924d5551156183ca2108cd11d7da2608df69',
+            'dev_requirement' => false,
+        ),
+        'lastguest/murmurhash' => array(
+            'pretty_version' => '1.3.0',
+            'version' => '1.3.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lastguest/murmurhash',
+            'aliases' => array(),
+            'reference' => '8eb06483456bc98f5adb7707d981a8ef6a065fa2',
+            'dev_requirement' => false,
+        ),
+        'mdanter/ecc' => array(
+            'pretty_version' => 'v0.4.3',
+            'version' => '0.4.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mdanter/ecc',
+            'aliases' => array(),
+            'reference' => 'fa3405da1b2bb4772a0c908c65b0c3e9dde4ccfd',
+            'dev_requirement' => false,
+        ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v2.0.20',
+            'version' => '2.0.20.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'reference' => '0f1f60250fccffeaf5dda91eea1c018aed1adc2a',
+            'dev_requirement' => false,
+        ),
+        'pleonasm/merkle-tree' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../pleonasm/merkle-tree',
+            'aliases' => array(),
+            'reference' => '9ddc9d0a0e396750fada378f3aa90f6c02dd56a1',
+            'dev_requirement' => false,
+        ),
     ),
-    'bitwasp/bitcoin' => 
-    array (
-      'pretty_version' => 'v0.0.35.1',
-      'version' => '0.0.35.1',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '14dd3eb03165d01c5ed3bcd77cd139ed0b3449c9',
-    ),
-    'bitwasp/buffertools' => 
-    array (
-      'pretty_version' => 'v0.4.7',
-      'version' => '0.4.7.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '9683014f59b401f6858ce069ebddc35140463fe1',
-    ),
-    'bitwasp/secp256k1-php' => 
-    array (
-      'pretty_version' => 'v0.1.4',
-      'version' => '0.1.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'dba022a223a5b6d3480ac30f119008ef036a7e34',
-    ),
-    'btccom/cashaddress' => 
-    array (
-      'pretty_version' => 'v0.0.3',
-      'version' => '0.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '29501f7875eca5325d61b4634714028db78bfc5f',
-    ),
-    'composer/semver' => 
-    array (
-      'pretty_version' => '1.7.2',
-      'version' => '1.7.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '647490bbcaf7fc4891c58f47b825eb99d19c377a',
-    ),
-    'fgrosse/phpasn1' => 
-    array (
-      'pretty_version' => 'v1.5.4',
-      'version' => '1.5.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '4fe0afb91b4ce3ca08c63d9cf31cec1150828e97',
-    ),
-    'lastguest/murmurhash' => 
-    array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8eb06483456bc98f5adb7707d981a8ef6a065fa2',
-    ),
-    'mdanter/ecc' => 
-    array (
-      'pretty_version' => 'v0.4.3',
-      'version' => '0.4.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fa3405da1b2bb4772a0c908c65b0c3e9dde4ccfd',
-    ),
-    'mycryptocheckout/api' => 
-    array (
-      'pretty_version' => '2.08',
-      'version' => '2.08.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '233c9903b0bdc09e61fc524d6375627227e72ce6',
-    ),
-    'paragonie/random_compat' => 
-    array (
-      'pretty_version' => 'v2.0.20',
-      'version' => '2.0.20.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '0f1f60250fccffeaf5dda91eea1c018aed1adc2a',
-    ),
-    'pleonasm/merkle-tree' => 
-    array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '9ddc9d0a0e396750fada378f3aa90f6c02dd56a1',
-    ),
-  ),
 );

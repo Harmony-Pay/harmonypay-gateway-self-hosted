@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 use BitWasp\Bitcoin\Bitcoin;
 use BitWasp\Bitcoin\Address\AddressCreator;
@@ -59,7 +59,7 @@ trait btc_hd_public_key_trait
 			return $address;
 
 		// Handle ETH differently.
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		$currency = $currencies->get( $wallet->get_currency_id() );
 		if ( $currency->id == 'ETH' )
 		// if ( isset( $currency->erc20 ) || $currency->id == 'ETH' )
@@ -150,7 +150,7 @@ trait btc_hd_public_key_trait
 		{
 			case 'BCH':
 				$address = $child_key->getAddress( new AddressCreator() )->getAddress();
-				$dir = dirname( MyCryptoCheckout()->paths( '__FILE__' ) );
+				$dir = dirname( HarmonyPay()->paths( '__FILE__' ) );
 				$dir = $dir . '/src/thirdparty/CashAddress.php';
 				require_once( $dir );
 				$ca = new \CashAddress\CashAddress();

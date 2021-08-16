@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		Anything with wallets goes here.

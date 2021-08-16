@@ -1,5 +1,5 @@
 {
-  "name": "MCC",
+  "name": "hrp",
   "version": "1.0.0",
   "description": "HarmonyPay plugin for WordPress",
   "main": "Gruntfile.js",
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/HarmonyPay/wordpress.git"
   },
-  "author": "mycryptocheckout",
+  "author": "harmonypay",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/HarmonyPay/wordpress/issues"

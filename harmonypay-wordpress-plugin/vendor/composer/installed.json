@@ -59,6 +59,10 @@
             ],
             "description": "PHP Bitcoin library with functions for transactions, signatures, serialization, Random/Deterministic ECDSA keys, blocks, RPC bindings",
             "homepage": "https://github.com/bit-wasp/bitcoin-php",
+            "support": {
+                "issues": "https://github.com/Bit-Wasp/bitcoin-php/issues",
+                "source": "https://github.com/Bit-Wasp/bitcoin-php/tree/0.0.35"
+            },
             "install-path": "../bitwasp/bitcoin"
         },
         {
@@ -209,6 +213,10 @@
                 "bitcoin cash",
                 "cashaddr"
             ],
+            "support": {
+                "issues": "https://github.com/btccom/cashaddr-php/issues",
+                "source": "https://github.com/btccom/cashaddr-php"
+            },
             "install-path": "../btccom/cashaddress"
         },
         {
@@ -364,7 +372,48 @@
                 "x509",
                 "x690"
             ],
+            "support": {
+                "issues": "https://github.com/fgrosse/PHPASN1/issues",
+                "source": "https://github.com/fgrosse/PHPASN1/tree/1.5"
+            },
             "install-path": "../fgrosse/phpasn1"
+        },
+        {
+            "name": "harmonypay/api",
+            "version": "v0.3",
+            "version_normalized": "0.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/harmonypay/harmonypay-api.git",
+                "reference": "64af924d5551156183ca2108cd11d7da2608df69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/harmonypay/harmonypay-api/get/64af924d5551156183ca2108cd11d7da2608df69.zip",
+                "reference": "64af924d5551156183ca2108cd11d7da2608df69",
+                "shasum": ""
+            },
+            "time": "2021-08-16T08:46:41+00:00",
+            "type": "github",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "harmonypay\\api\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-only"
+            ],
+            "description": "HarmonyPay API for communicating with the API server.",
+            "homepage": "https://harmonypay.com/",
+            "keywords": [
+                "harmonypay"
+            ],
+            "support": {
+                "source": "https://bitbucket.org/harmonypay/harmonypay-api/src/64af924d5551156183ca2108cd11d7da2608df69/?at=v0.3"
+            },
+            "install-path": "../harmonypay/api"
         },
         {
             "name": "lastguest/murmurhash",
@@ -410,6 +459,10 @@
                 "hashing",
                 "murmur"
             ],
+            "support": {
+                "issues": "https://github.com/lastguest/murmurhash-php/issues",
+                "source": "https://github.com/lastguest/murmurhash-php/tree/master"
+            },
             "install-path": "../lastguest/murmurhash"
         },
         {
@@ -479,45 +532,11 @@
                 "phpecc",
                 "secp256k1"
             ],
-            "install-path": "../mdanter/ecc"
-        },
-        {
-            "name": "mycryptocheckout/api",
-            "version": "2.08",
-            "version_normalized": "2.08.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://bitbucket.org/mycryptocheckout/api.git",
-                "reference": "233c9903b0bdc09e61fc524d6375627227e72ce6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://bitbucket.org/mycryptocheckout/api/get/233c9903b0bdc09e61fc524d6375627227e72ce6.zip",
-                "reference": "233c9903b0bdc09e61fc524d6375627227e72ce6",
-                "shasum": ""
-            },
-            "time": "2021-02-15T20:06:42+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "mycryptocheckout\\api\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-only"
-            ],
-            "description": "MyCryptoCheckout API for communicating with the API server.",
-            "homepage": "https://mycryptocheckout.com/",
-            "keywords": [
-                "mycryptocheckout"
-            ],
             "support": {
-                "issues": "https://bitbucket.org/mycryptocheckout/api/issues",
-                "source": "https://bitbucket.org/mycryptocheckout/api/src/233c9903b0bdc09e61fc524d6375627227e72ce6/?at=2.08"
+                "issues": "https://github.com/phpecc/phpecc/issues",
+                "source": "https://github.com/phpecc/phpecc/tree/0.4"
             },
-            "install-path": "../mycryptocheckout/api"
+            "install-path": "../mdanter/ecc"
         },
         {
             "name": "paragonie/random_compat",
@@ -620,6 +639,10 @@
                 }
             ],
             "description": "An implementation of a Merkle Tree in PHP",
+            "support": {
+                "issues": "https://github.com/pleonasm/merkle-tree/issues",
+                "source": "https://github.com/pleonasm/merkle-tree/tree/master"
+            },
             "install-path": "../pleonasm/merkle-tree"
         }
     ],

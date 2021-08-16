@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\actions;
+namespace harmonypay\actions;
 
 /**
 	@brief		Mark a payment as completed.
@@ -21,7 +21,7 @@ class generate_checkout_javascript_data
 	**/
 	public function render()
 	{
-		return sprintf( '<div id="mycryptocheckout_checkout_data" type="text/javascript" data-mycryptocheckout_checkout_data="%s"></div>',
+		return sprintf( '<div id="harmonypay_checkout_data" type="text/javascript" data-harmonypay_checkout_data="%s"></div>',
 			base64_encode( json_encode( $this->data->to_array() ) )
 		);
 	}

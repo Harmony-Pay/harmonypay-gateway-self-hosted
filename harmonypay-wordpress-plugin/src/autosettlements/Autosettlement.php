@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\autosettlements;
+namespace harmonypay\autosettlements;
 
 use Exception;
 
@@ -9,10 +9,10 @@ use Exception;
 	@since		2019-02-21 19:33:29
 **/
 class Autosettlement
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
-	use \mycryptocheckout\traits\network_available;
-	use \mycryptocheckout\traits\label_for_item;
+	use \harmonypay\traits\network_available;
+	use \harmonypay\traits\label_for_item;
 
 	/**
 		@brief		Is this autosettlement enabled?
@@ -51,13 +51,13 @@ class Autosettlement
 		$autosettlement = [];
 		$autosettlement[ 'type' ] = $this->get_type();
 
-		$keys_to_copy = MyCryptoCheckout()->autosettlement_keys_to_payment( $this->get_type() );
+		$keys_to_copy = HarmonyPay()->autosettlement_keys_to_payment( $this->get_type() );
 		foreach( $keys_to_copy as $key_to_copy )
 			$autosettlement[ $key_to_copy ] = $this->get( $key_to_copy );
 
 		$data->autosettlements []= $autosettlement;
 
-		MyCryptoCheckout()->debug( 'Adding autosettlements %s to payment %s', $data->autosettlements, $payment );
+		HarmonyPay()->debug( 'Adding autosettlements %s to payment %s', $data->autosettlements, $payment );
 
 		$payment->data()->set( 'autosettlements', $data->autosettlements );
 	}
@@ -80,7 +80,7 @@ class Autosettlement
 		$r = [];
 
 		if ( ! $this->get_enabled() )
-			$r []= __( 'This autosettlement is disabled.', 'mycryptocheckout' );
+			$r []= __( 'This autosettlement is disabled.', 'harmonypay' );
 
 		if ( $this->label != '' )
 			$r []= $this->label;
@@ -88,10 +88,10 @@ class Autosettlement
 		$r = $this->get_network_details( $r );
 
 		if ( count( $this->get_currencies() ) < 1 )
-			$r []= __( 'All currencies.', 'mycryptocheckout' );
+			$r []= __( 'All currencies.', 'harmonypay' );
 		else
 			$r []= sprintf(
-				__( 'Currencies: %s.', 'mycryptocheckout' ),
+				__( 'Currencies: %s.', 'harmonypay' ),
 				implode( ', ', $this->get_currencies() )
 			);
 
@@ -104,7 +104,7 @@ class Autosettlement
 			$currency = $this->get( $key );
 			if ( $currency != '' )
 				$r []= sprintf(
-					__( 'Settling to %s', 'mycryptocheckout' ),
+					__( 'Settling to %s', 'harmonypay' ),
 					$currency
 				);
 		}
@@ -168,10 +168,10 @@ class Autosettlement
 	**/
 	public function test()
 	{
-		$autosettlement = new \mycryptocheckout\api\v2\Autosettlement();
+		$autosettlement = new \harmonypay\api\v2\Autosettlement();
 		$autosettlement->set_type( $this->get_type() );
 		foreach( $this as $key => $value )
 			$autosettlement->$key = $value;
-		return MyCryptoCheckout()->api()->autosettlements()->test( $autosettlement );
+		return HarmonyPay()->api()->autosettlements()->test( $autosettlement );
 	}
 }

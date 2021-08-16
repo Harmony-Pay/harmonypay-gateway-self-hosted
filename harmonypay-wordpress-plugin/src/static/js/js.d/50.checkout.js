@@ -1,11 +1,11 @@
-var mycryptocheckout_checkout_javascript = function( data )
+var harmonypay_checkout_javascript = function( data )
 {
 	var $$ = this;
 	$$.data = data;
 	$$.$div = $( '.mcc.online_payment_instructions' );
-	$$.$online_pay_box = $( '.mcc_online_pay_box', $$.$div );
+	$$.$online_pay_box = $( '.hrp_online_pay_box', $$.$div );
 	$$.$payment_buttons = $( '<div class="payment_buttons">' );
-	$$.mycryptocheckout_checkout_data = false;
+	$$.harmonypay_checkout_data = false;
 
 	/**
 		@brief		Show the browser link button.
@@ -28,22 +28,22 @@ var mycryptocheckout_checkout_javascript = function( data )
 		.done( function( page )
 		{
 			var $page = $( page );
-			var $mycryptocheckout_checkout_data = $( '#mycryptocheckout_checkout_data', $page );
-			if ( $mycryptocheckout_checkout_data.length < 1 )
+			var $harmonypay_checkout_data = $( '#harmonypay_checkout_data', $page );
+			if ( $harmonypay_checkout_data.length < 1 )
 			{
 				// Something went wrong.
 				document.location = url;
 				return;
 			}
 
-			var mycryptocheckout_checkout_data = $$.extract_data( $mycryptocheckout_checkout_data );
+			var harmonypay_checkout_data = $$.extract_data( $harmonypay_checkout_data );
 
-			console.log(mycryptocheckout_checkout_data);
+			console.log(harmonypay_checkout_data);
 
-			if ( mycryptocheckout_checkout_data[ 'paid' ] === undefined )
+			if ( harmonypay_checkout_data[ 'paid' ] === undefined )
 				return;
 
-			if ( mycryptocheckout_checkout_data[ 'paid' ] === false )
+			if ( harmonypay_checkout_data[ 'paid' ] === false )
 			{
 				document.location = url;
 				return;
@@ -64,7 +64,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 	**/
 	$$.extract_data = function( $div )
 	{
-		var data = $div.data( 'mycryptocheckout_checkout_data' );
+		var data = $div.data( 'harmonypay_checkout_data' );
 		data = atob( data );
 		data = jQuery.parseJSON( data );
 		return data;
@@ -74,9 +74,9 @@ var mycryptocheckout_checkout_javascript = function( data )
 	{
 		if ( $$.$div.length < 1 )
 			return;
-		$$.$div.addClass( 'mycryptocheckout' );
-		$$.mycryptocheckout_checkout_data = $$.extract_data( $( '#mycryptocheckout_checkout_data' ) );
-		console.log( 'MyCryptoCheckout: Checkout data', $$.mycryptocheckout_checkout_data );
+		$$.$div.addClass( 'harmonypay' );
+		$$.harmonypay_checkout_data = $$.extract_data( $( '#harmonypay_checkout_data' ) );
+		console.log( 'HarmonyPay: Checkout data', $$.harmonypay_checkout_data );
 		$$.maybe_ens_address();
 		$$.clipboard_inputs();
 		$$.maybe_hide_woocommerce_order_overview();
@@ -97,7 +97,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 	$$.clipboard_inputs = function()
 	{
 		// On the purchase confirmation page, convert the amount and address to a copyable input.
-		$( '.to_input', $$.$div ).mcc_make_clipboard();
+		$( '.to_input', $$.$div ).hrp_make_clipboard();
 	}
 
 	/**
@@ -106,24 +106,24 @@ var mycryptocheckout_checkout_javascript = function( data )
 	**/
 	$$.maybe_browser_link = function()
 	{
-		if( $$.mycryptocheckout_checkout_data.supports != null && typeof $$.mycryptocheckout_checkout_data.supports.wp_plugin_open_in_wallet != 'undefined' )
-			$$.show_browser_link = $$.mycryptocheckout_checkout_data.supports.wp_plugin_open_in_wallet;
+		if( $$.harmonypay_checkout_data.supports != null && typeof $$.harmonypay_checkout_data.supports.wp_plugin_open_in_wallet != 'undefined' )
+			$$.show_browser_link = $$.harmonypay_checkout_data.supports.wp_plugin_open_in_wallet;
 
 		if ( ! $$.show_browser_link )
 			return;
 			
 		// Don't show browser link for erc20.
-		if ( $$.mycryptocheckout_checkout_data.currency.erc20 !== undefined || $$.mycryptocheckout_checkout_data.currency.hrc20 !== undefined )
+		if ( $$.harmonypay_checkout_data.currency.erc20 !== undefined || $$.harmonypay_checkout_data.currency.hrc20 !== undefined )
 			return;
 
 		// Extract the currency name from the qr code, if possible.
-		var currency_name = $$.mycryptocheckout_checkout_data.currency_id;
+		var currency_name = $$.harmonypay_checkout_data.currency_id;
 		if ( $$.data.qr_codes !== undefined )
 			if ( $$.data.qr_codes[ $$.data.currency_id ] !== undefined )
 				currency_name = $$.data.qr_codes[ $$.data.currency_id ].replace( /:.*/, '' );
 
-		if( typeof $$.mycryptocheckout_checkout_data.supports.wp_plugin_open_in_wallet_url != 'undefined' )
-			var html = $$.mycryptocheckout_checkout_data.supports.wp_plugin_open_in_wallet_url;
+		if( typeof $$.harmonypay_checkout_data.supports.wp_plugin_open_in_wallet_url != 'undefined' )
+			var html = $$.harmonypay_checkout_data.supports.wp_plugin_open_in_wallet_url;
 		else
 			var html = '<a href="MCC_CURRENCY:MCC_TO?amount=MCC_AMOUNT"><div class="open_wallet_payment"></div></a>';
 		html = $$.replace_keywords( html );
@@ -164,7 +164,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 	**/
 	$$.maybe_generate_qr_code = function()
 	{
-		var $qr_code = $( '.mcc_qr_code', $$.$div );
+		var $qr_code = $( '.hrp_qr_code', $$.$div );
 
 		if ( $$.data.qr_code_html === undefined )
 			return $qr_code.remove();		// Kill any existing qr code.
@@ -279,20 +279,20 @@ var mycryptocheckout_checkout_javascript = function( data )
 		window.web3.contracts.wallet = window.web3.wallet;
 
 		// The data must support metamask.
-		if ( typeof $$.mycryptocheckout_checkout_data.supports === 'undefined' || $$.mycryptocheckout_checkout_data.supports === null )
+		if ( typeof $$.harmonypay_checkout_data.supports === 'undefined' || $$.harmonypay_checkout_data.supports === null )
 			return;
 
 		var contractInstance = false;
-		if ( $$.mycryptocheckout_checkout_data.supports.metamask_abi !== null )
+		if ( $$.harmonypay_checkout_data.supports.metamask_abi !== null )
 		{
-			contractInstance = window.web3.contracts.createContract(JSON.parse( $$.mycryptocheckout_checkout_data.supports.metamask_abi ), $$.mycryptocheckout_checkout_data.currency.contract);
-			//new web3.eth.Contract( JSON.parse( $$.mycryptocheckout_checkout_data.supports.metamask_abi ), $$.mycryptocheckout_checkout_data.currency.contract );
-            // var Contract = web3.eth.contract( JSON.parse( $$.mycryptocheckout_checkout_data.supports.metamask_abi ) );
-            // contractInstance = Contract.at( $$.mycryptocheckout_checkout_data.currency.contract )
+			contractInstance = window.web3.contracts.createContract(JSON.parse( $$.harmonypay_checkout_data.supports.metamask_abi ), $$.harmonypay_checkout_data.currency.contract);
+			//new web3.eth.Contract( JSON.parse( $$.harmonypay_checkout_data.supports.metamask_abi ), $$.harmonypay_checkout_data.currency.contract );
+            // var Contract = web3.eth.contract( JSON.parse( $$.harmonypay_checkout_data.supports.metamask_abi ) );
+            // contractInstance = Contract.at( $$.harmonypay_checkout_data.currency.contract )
 		}
 
 		if ( contractInstance === false )
-			if( typeof $$.mycryptocheckout_checkout_data.supports.metamask_currency === 'undefined' )
+			if( typeof $$.harmonypay_checkout_data.supports.metamask_currency === 'undefined' )
 				return;
 
 		$$.show_browser_link = false;
@@ -312,7 +312,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 		{
 			try {
 				var fromAddress;
-				var toAddress = $$.mycryptocheckout_checkout_data.to; 
+				var toAddress = $$.harmonypay_checkout_data.to; 
 				//var gasPrice = new window.HarmonyUtils.Unit('1').asGwei().toWei();
 				//var gasLimit = '25000';
 
@@ -329,13 +329,13 @@ var mycryptocheckout_checkout_javascript = function( data )
 				{  
 					//How to Create the transaction manually and sign with the harmony extension
 					//Sign Normal Transaction for transfer funds
-					//var oneCoin = new window.HarmonyCrypto.BN(`${$$.mycryptocheckout_checkout_data.amount}`);
+					//var oneCoin = new window.HarmonyCrypto.BN(`${$$.harmonypay_checkout_data.amount}`);
 					//harmony.blockchain.getTransactionCount({address: fromAddress}).then( async _nounce => {
 					//	console.log(window.HarmonyUtils.hexToNumber(_nounce.result));
 					const txn = window.web3.transactions.newTx({
 					from: new window.HarmonyCrypto.HarmonyAddress(fromAddress).checksum,
 					to: new window.HarmonyCrypto.HarmonyAddress(toAddress).checksum,
-					value: window.HarmonyUtils.Unit.One($$.mycryptocheckout_checkout_data.amount).toHex(),
+					value: window.HarmonyUtils.Unit.One($$.harmonypay_checkout_data.amount).toHex(),
 					shardID: 0,
 					toShardID: 0,
 					//nounce: _nounce.result,
@@ -352,36 +352,36 @@ var mycryptocheckout_checkout_javascript = function( data )
 				}
 				else
 				{
-					var amount = $$.mycryptocheckout_checkout_data.amount;
+					var amount = $$.harmonypay_checkout_data.amount;
 					// If there is a divider, use it.
-					if ( typeof $$.mycryptocheckout_checkout_data.currency.divider !== 'undefined' )
-						amount *= $$.mycryptocheckout_checkout_data.currency.divider;
+					if ( typeof $$.harmonypay_checkout_data.currency.divider !== 'undefined' )
+						amount *= $$.harmonypay_checkout_data.currency.divider;
 						else
-						amount = new window.HarmonyUtils.Unit($$.mycryptocheckout_checkout_data.amount).asEther().toWei();//web3.utils.toWei( amount, $$.mycryptocheckout_checkout_data.supports.metamask_currency );
+						amount = new window.HarmonyUtils.Unit($$.harmonypay_checkout_data.amount).asEther().toWei();//web3.utils.toWei( amount, $$.harmonypay_checkout_data.supports.metamask_currency );
 
 					// .transfer loves plain strings.
 					amount = amount + "";
 
-					if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas !== 'undefined' )
+					if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas !== 'undefined' )
 					{
-						var metamask_gas = $$.mycryptocheckout_checkout_data.supports.metamask_gas;
+						var metamask_gas = $$.harmonypay_checkout_data.supports.metamask_gas;
 						send_parameters[ 'gasPrice' ] = web3.utils.toWei( metamask_gas.price + '', 'gwei' );
 						// Does the currency have its own custom gas limit?
-						if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit !== 'undefined' )
-							metamask_gas.limit = $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit;
+						if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas_limit !== 'undefined' )
+							metamask_gas.limit = $$.harmonypay_checkout_data.supports.metamask_gas_limit;
 						send_parameters[ 'gas' ] = metamask_gas.limit + '';
 					}
 
 					console.log(
 						{
-							to: new window.HarmonyCrypto.getAddress($$.mycryptocheckout_checkout_data.to).basicHex,
+							to: new window.HarmonyCrypto.getAddress($$.harmonypay_checkout_data.to).basicHex,
 							from: new window.HarmonyCrypto.HarmonyAddress(fromAddress).checksum,
 							gaslimit: '250000', //default gaslimit for Hrc20 transaction is '250000'
 							gasPrice: window.HarmonyUtils.numberToHex(new window.HarmonyUtils.Unit('1').asGwei().toWei()),
 						}
 					)
 					await contractInstance.methods
-					.transfer(new window.HarmonyCrypto.getAddress($$.mycryptocheckout_checkout_data.to).basicHex, amount)
+					.transfer(new window.HarmonyCrypto.getAddress($$.harmonypay_checkout_data.to).basicHex, amount)
 					.send({
 						from: new window.HarmonyCrypto.HarmonyAddress(fromAddress).checksum,
 						gaslimit: '250000', //default gaslimit for Hrc20 transaction is '250000'
@@ -404,7 +404,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 
 
 					//contractInstance.methods
-					//	.transfer( window.HarmonyCrypto.fromBech32($$.mycryptocheckout_checkout_data.to), amount )
+					//	.transfer( window.HarmonyCrypto.fromBech32($$.harmonypay_checkout_data.to), amount )
 					//	.send( send_parameters );
 				}
 				//})
@@ -416,9 +416,9 @@ var mycryptocheckout_checkout_javascript = function( data )
 
 				if ( contractInstance === false )
 				{
-					send_parameters[ 'to' ] = $$.mycryptocheckout_checkout_data.to;
+					send_parameters[ 'to' ] = $$.harmonypay_checkout_data.to;
 					send_parameters[ 'value' ] = web3.utils.toHex(
-						web3.utils.toWei( $$.mycryptocheckout_checkout_data.amount, $$.mycryptocheckout_checkout_data.supports.metamask_currency )
+						web3.utils.toWei( $$.harmonypay_checkout_data.amount, $$.harmonypay_checkout_data.supports.metamask_currency )
 					);
 					console.log( 'ETH send parameters', send_parameters );
 					await window.ethereum.request(
@@ -434,30 +434,30 @@ var mycryptocheckout_checkout_javascript = function( data )
 				}
 				else
 				{
-					var amount = $$.mycryptocheckout_checkout_data.amount;
+					var amount = $$.harmonypay_checkout_data.amount;
 					// If there is a divider, use it.
-					if ( typeof $$.mycryptocheckout_checkout_data.currency.divider !== 'undefined' )
-						amount *= $$.mycryptocheckout_checkout_data.currency.divider;
+					if ( typeof $$.harmonypay_checkout_data.currency.divider !== 'undefined' )
+						amount *= $$.harmonypay_checkout_data.currency.divider;
 						else
-						amount = web3.utils.toWei( amount, $$.mycryptocheckout_checkout_data.supports.metamask_currency );
+						amount = web3.utils.toWei( amount, $$.harmonypay_checkout_data.supports.metamask_currency );
 
 					// .transfer loves plain strings.
 					amount = amount + "";
 
-					if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas !== 'undefined' )
+					if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas !== 'undefined' )
 					{
-						var metamask_gas = $$.mycryptocheckout_checkout_data.supports.metamask_gas;
+						var metamask_gas = $$.harmonypay_checkout_data.supports.metamask_gas;
 						send_parameters[ 'gasPrice' ] = web3.utils.toWei( metamask_gas.price + '', 'gwei' );
 						// Does the currency have its own custom gas limit?
-						if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit !== 'undefined' )
-							metamask_gas.limit = $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit;
+						if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas_limit !== 'undefined' )
+							metamask_gas.limit = $$.harmonypay_checkout_data.supports.metamask_gas_limit;
 						send_parameters[ 'gas' ] = metamask_gas.limit + '';
 					}
 
 					console.log( "ERC20 parameters", send_parameters );
 
 					contractInstance.methods
-						.transfer( $$.mycryptocheckout_checkout_data.to, amount )
+						.transfer( $$.harmonypay_checkout_data.to, amount )
 						.send( send_parameters );
 				}*/
 
@@ -490,21 +490,21 @@ var mycryptocheckout_checkout_javascript = function( data )
 		window.web3 = new Web3(ethereum);
 
 		// The data must support metamask.
-		if ( typeof $$.mycryptocheckout_checkout_data.supports === 'undefined' || $$.mycryptocheckout_checkout_data.supports === null )
+		if ( typeof $$.harmonypay_checkout_data.supports === 'undefined' || $$.harmonypay_checkout_data.supports === null )
 			return;
 
 		var contractInstance = false;
 	
 
-		if ( $$.mycryptocheckout_checkout_data.supports.metamask_abi !== null)
+		if ( $$.harmonypay_checkout_data.supports.metamask_abi !== null)
 		{
-			contractInstance = new web3.eth.Contract( JSON.parse( $$.mycryptocheckout_checkout_data.supports.metamask_abi ), $$.mycryptocheckout_checkout_data.currency.contract );
-            // var Contract = web3.eth.contract( JSON.parse( $$.mycryptocheckout_checkout_data.supports.metamask_abi ) );
-            // contractInstance = Contract.at( $$.mycryptocheckout_checkout_data.currency.contract )
+			contractInstance = new web3.eth.Contract( JSON.parse( $$.harmonypay_checkout_data.supports.metamask_abi ), $$.harmonypay_checkout_data.currency.contract );
+            // var Contract = web3.eth.contract( JSON.parse( $$.harmonypay_checkout_data.supports.metamask_abi ) );
+            // contractInstance = Contract.at( $$.harmonypay_checkout_data.currency.contract )
 		}
 
 		if ( contractInstance === false )
-			if( typeof $$.mycryptocheckout_checkout_data.supports.metamask_currency === 'undefined' )
+			if( typeof $$.harmonypay_checkout_data.supports.metamask_currency === 'undefined' )
 				return;
 
 		$$.show_browser_link = false;
@@ -524,10 +524,10 @@ var mycryptocheckout_checkout_javascript = function( data )
 
 				if ( contractInstance === false )
 				{
-					send_parameters[ 'to' ] = window.HarmonyCrypto.fromBech32($$.mycryptocheckout_checkout_data.to);
-					send_parameters[ 'value' ] = window.HarmonyUtils.numberToHex(new window.HarmonyUtils.Unit($$.mycryptocheckout_checkout_data.amount).asEther().toWei());
+					send_parameters[ 'to' ] = window.HarmonyCrypto.fromBech32($$.harmonypay_checkout_data.to);
+					send_parameters[ 'value' ] = window.HarmonyUtils.numberToHex(new window.HarmonyUtils.Unit($$.harmonypay_checkout_data.amount).asEther().toWei());
 					//send_parameters[ 'value' ] = web3.utils.toHex(
-					//	web3.utils.toWei( $$.mycryptocheckout_checkout_data.amount, $$.mycryptocheckout_checkout_data.supports.metamask_currency )
+					//	web3.utils.toWei( $$.harmonypay_checkout_data.amount, $$.harmonypay_checkout_data.supports.metamask_currency )
 					//);
 					console.log( 'ETH send parameters', send_parameters );
 					await window.ethereum.request(
@@ -543,30 +543,30 @@ var mycryptocheckout_checkout_javascript = function( data )
 				}
 				else
 				{
-					var amount = $$.mycryptocheckout_checkout_data.amount;
+					var amount = $$.harmonypay_checkout_data.amount;
 					// If there is a divider, use it.
-					if ( typeof $$.mycryptocheckout_checkout_data.currency.divider !== 'undefined' )
-						amount *= $$.mycryptocheckout_checkout_data.currency.divider;
+					if ( typeof $$.harmonypay_checkout_data.currency.divider !== 'undefined' )
+						amount *= $$.harmonypay_checkout_data.currency.divider;
 						else
-						amount = new window.HarmonyUtils.Unit($$.mycryptocheckout_checkout_data.amount).asEther().toWei();//web3.utils.toWei( amount, $$.mycryptocheckout_checkout_data.supports.metamask_currency );
+						amount = new window.HarmonyUtils.Unit($$.harmonypay_checkout_data.amount).asEther().toWei();//web3.utils.toWei( amount, $$.harmonypay_checkout_data.supports.metamask_currency );
 
 					// .transfer loves plain strings.
 					amount = amount + "";
 
-					if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas !== 'undefined' )
+					if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas !== 'undefined' )
 					{
-						var metamask_gas = $$.mycryptocheckout_checkout_data.supports.metamask_gas;
+						var metamask_gas = $$.harmonypay_checkout_data.supports.metamask_gas;
 						send_parameters[ 'gasPrice' ] = web3.utils.toWei( metamask_gas.price + '', 'gwei' );
 						// Does the currency have its own custom gas limit?
-						if ( typeof $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit !== 'undefined' )
-							metamask_gas.limit = $$.mycryptocheckout_checkout_data.supports.metamask_gas_limit;
+						if ( typeof $$.harmonypay_checkout_data.supports.metamask_gas_limit !== 'undefined' )
+							metamask_gas.limit = $$.harmonypay_checkout_data.supports.metamask_gas_limit;
 						send_parameters[ 'gas' ] = metamask_gas.limit + '';
 					}
 
 					console.log( "ERC20 parameters", send_parameters );
 
 					contractInstance.methods
-						.transfer( window.HarmonyCrypto.fromBech32($$.mycryptocheckout_checkout_data.to), amount )
+						.transfer( window.HarmonyCrypto.fromBech32($$.harmonypay_checkout_data.to), amount )
 						.send( send_parameters );
 				}
 
@@ -588,7 +588,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 			return;
 
 		// Create the new div and put it after the h2.
-		$$.$online_pay_box = $( '<div>' ).addClass( 'mcc_online_pay_box' );
+		$$.$online_pay_box = $( '<div>' ).addClass( 'hrp_online_pay_box' );
 		var $h2 = $( 'h2', $$.$div );
 		$$.$online_pay_box.insertAfter( $h2 );
 
@@ -596,7 +596,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 		$( 'p', $$.$div ).appendTo( $$.$online_pay_box );
 
 		// If there is a QR div, put it in there also.
-		$( '.mcc_qr_code', $$.$div ).appendTo( $$.$online_pay_box );
+		$( '.hrp_qr_code', $$.$div ).appendTo( $$.$online_pay_box );
 
 		// Instructions div is now upgraded to version 2.05.
 	}
@@ -609,11 +609,11 @@ var mycryptocheckout_checkout_javascript = function( data )
 	{
 		var add_waves = false;
 		var currency = 'WAVES';
-		if ( typeof ( $$.mycryptocheckout_checkout_data.waves ) !== 'undefined' )
+		if ( typeof ( $$.harmonypay_checkout_data.waves ) !== 'undefined' )
 		{
 			add_waves = true;
-			console.log( 'MyCryptoCheckout: Waves link', $$.mycryptocheckout_checkout_data );
-			currency = $$.mycryptocheckout_checkout_data.token_id;
+			console.log( 'HarmonyPay: Waves link', $$.harmonypay_checkout_data );
+			currency = $$.harmonypay_checkout_data.token_id;
 		}
 		if ( $$.data.currency_id == 'WAVES' )
 			add_waves = true;
@@ -638,8 +638,8 @@ var mycryptocheckout_checkout_javascript = function( data )
 	**/
 	$$.replace_keywords = function( string )
 	{
-		string = string.replace( 'MCC_AMOUNT', $$.mycryptocheckout_checkout_data.amount );
-		string = string.replace( 'MCC_TO', $$.mycryptocheckout_checkout_data.to );
+		string = string.replace( 'MCC_AMOUNT', $$.harmonypay_checkout_data.amount );
+		string = string.replace( 'MCC_TO', $$.harmonypay_checkout_data.to );
 		return string;
 	}
 
@@ -682,7 +682,7 @@ var mycryptocheckout_checkout_javascript = function( data )
 	$$.init();
 }
 
-var mycryptocheckout_convert_data = function( key, callback )
+var harmonypay_convert_data = function( key, callback )
 {
 	var $data = $( '#' + key );
 	if ( $data.length < 1 )

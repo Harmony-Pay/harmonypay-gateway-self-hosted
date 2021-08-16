@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 use Exception;
 
@@ -35,7 +35,7 @@ trait misc_methods_trait
 		$options = json_encode( $options );
 		// And we want to avoid the json from being unintentionally unencoded.
 		$options = base64_encode( $options );
-		wp_schedule_single_event( time() + ( 15 * MINUTE_IN_SECONDS ), 'mycryptocheckout_check_for_valid_payment_id', [ $options ] );
+		wp_schedule_single_event( time() + ( 15 * MINUTE_IN_SECONDS ), 'harmonypay_check_for_valid_payment_id', [ $options ] );
 	}
 
 	/**
@@ -53,7 +53,7 @@ trait misc_methods_trait
 	**/
 	public function enqueue_css()
 	{
-		wp_enqueue_style( 'mycryptocheckout', MyCryptoCheckout()->paths( 'url' ) . '/src/static/css/mycryptocheckout.css', $this->plugin_version );
+		wp_enqueue_style( 'harmonypay', HarmonyPay()->paths( 'url' ) . '/src/static/css/harmonypay.css', $this->plugin_version );
 	}
 
 	/**
@@ -62,7 +62,7 @@ trait misc_methods_trait
 	**/
 	public function enqueue_js()
 	{
-		wp_enqueue_script( 'mycryptocheckout', MyCryptoCheckout()->paths( 'url' ) . '/src/static/js/mycryptocheckout.js', [ 'jquery' ], $this->plugin_version );
+		wp_enqueue_script( 'harmonypay', HarmonyPay()->paths( 'url' ) . '/src/static/js/harmonypay.js', [ 'jquery' ], $this->plugin_version );
 	}
 
 	/**
@@ -85,12 +85,12 @@ trait misc_methods_trait
 	public function gateway_strings()
 	{
 		$r = $this->collection();
-		$r->set( 'currency_selection_text', __( 'Please select a currency', 'mycryptocheckout' ) );
-		$r->set( 'gateway_name', __( 'Cryptocurrency', 'mycryptocheckout' ) );
-		$r->set( 'online_payment_instructions_description', __( 'Instructions for payment that will be shown on the purchase confirmation page. The following shortcodes are available: [AMOUNT], [CURRENCY], [TO]', 'mycryptocheckout' ) );
+		$r->set( 'currency_selection_text', __( 'Please select a currency', 'harmonypay' ) );
+		$r->set( 'gateway_name', __( 'Cryptocurrency', 'harmonypay' ) );
+		$r->set( 'online_payment_instructions_description', __( 'Instructions for payment that will be shown on the purchase confirmation page. The following shortcodes are available: [AMOUNT], [CURRENCY], [TO]', 'harmonypay' ) );
 		$r->set( 'online_payment_instructions', $this->wpautop_file( 'online_payment_instructions' ) );
 		$r->set( 'email_payment_instructions', $this->wpautop_file( 'email_payment_instructions' ) );
-		$r->set( 'email_payment_instructions_description', __( 'Instructions for payment that will be added to the e-mail receipt. The following shortcodes are available: [AMOUNT], [CURRENCY], [TO]', 'mycryptocheckout' ) );
+		$r->set( 'email_payment_instructions_description', __( 'Instructions for payment that will be added to the e-mail receipt. The following shortcodes are available: [AMOUNT], [CURRENCY], [TO]', 'harmonypay' ) );
 		return $r;
 	}
 
@@ -324,8 +324,8 @@ trait misc_methods_trait
 	**/
 	public function init_misc_methods_trait()
 	{
-		$this->add_action( 'mycryptocheckout_check_for_valid_payment_id' );
-		$this->add_action( 'mycryptocheckout_generate_checkout_javascript_data', 100 );
+		$this->add_action( 'harmonypay_check_for_valid_payment_id' );
+		$this->add_action( 'harmonypay_generate_checkout_javascript_data', 100 );
 	}
 
 	/**
@@ -390,10 +390,10 @@ trait misc_methods_trait
 
 		$marked_up_amount = $amount;
 
-		$markup_amount = MyCryptoCheckout()->get_site_option( 'markup_amount' );
+		$markup_amount = HarmonyPay()->get_site_option( 'markup_amount' );
 		$marked_up_amount += $markup_amount;
 
-		$markup_percent = MyCryptoCheckout()->get_site_option( 'markup_percent' );
+		$markup_percent = HarmonyPay()->get_site_option( 'markup_percent' );
 		$marked_up_amount = $marked_up_amount * ( 1 + ( $markup_percent / 100 ) );
 
 		if ( strpos( $marked_up_amount, 'E' ) !== false )
@@ -404,7 +404,7 @@ trait misc_methods_trait
 			$marked_up_amount = rtrim( $marked_up_amount, '0' );
 		}
 
-		$action = MyCryptoCheckout()->new_action( 'markup_amount' );
+		$action = HarmonyPay()->new_action( 'markup_amount' );
 		$action->currency_id = $options[ 'currency_id' ];
 		$action->markup_amount = $markup_amount;
 		$action->markup_percent = $markup_percent;
@@ -464,10 +464,10 @@ trait misc_methods_trait
 	}
 
 	/**
-		@brief		mycryptocheckout_check_for_valid_payment_id
+		@brief		harmonypay_check_for_valid_payment_id
 		@since		2018-10-29 22:03:57
 	**/
-	public function mycryptocheckout_check_for_valid_payment_id( $args )
+	public function harmonypay_check_for_valid_payment_id( $args )
 	{
 		$args = base64_decode( $args );
 		$args = json_decode( $args );
@@ -484,7 +484,7 @@ trait misc_methods_trait
 			if ( ! $post )
 				throw new Exception( sprintf( 'Post %s does not exist.', $post_id ) );
 
-			$payment_id = get_post_meta( $post_id, '_mcc_payment_id', true );
+			$payment_id = get_post_meta( $post_id, '_hrp_payment_id', true );
 			
 			// If there is no payment ID at ALL, then the payment was not created by us.
 			if ( $payment_id === false )
@@ -496,14 +496,14 @@ trait misc_methods_trait
 				$admin_email = get_option( 'admin_email' );
 				$mail->to( $admin_email );
 				$mail->from( $admin_email );
-				$mail->subject( 'MyCryptoCheckout: Unable to contact the API server' );
+				$mail->subject( 'HarmonyPay: Unable to contact the API server' );
 				$url = sprintf( '<a href="%s">%s</a>', get_permalink( $post_id ), $post->post_title );
 				$text = '';
 				$text .= "Dear admin!\n";
 				$text .= "\n";
-				$text .= "MyCryptoCheckout was recently unable to contact the API server in order to retrieve a payment ID. The plugin will continue to attempt to contact the API. The gateway will be unable to process payments until it has re-established a connection.\n";
+				$text .= "HarmonyPay was recently unable to contact the API server in order to retrieve a payment ID. The plugin will continue to attempt to contact the API. The gateway will be unable to process payments until it has re-established a connection.\n";
 				$text .= "\n";
-				$text .= "Please log in and try refreshing your MyCryptoCheckout account settings.\n";
+				$text .= "Please log in and try refreshing your HarmonyPay account settings.\n";
 				$text = wpautop( $text );
 				$mail->html( $text );
 				$mail->send();
@@ -521,10 +521,10 @@ trait misc_methods_trait
 	}
 
 	/**
-		@brief		mycryptocheckout_generate_checkout_javascript_data
+		@brief		harmonypay_generate_checkout_javascript_data
 		@since		2018-04-29 19:21:11
 	**/
-	public function mycryptocheckout_generate_checkout_javascript_data( $action )
+	public function harmonypay_generate_checkout_javascript_data( $action )
 	{
 		$this->payment_timer_generate_checkout_javascript_data( $action );
 		$this->qr_code_generate_checkout_javascript_data( $action );
@@ -583,13 +583,13 @@ trait misc_methods_trait
 			'expired_license_nag_dismissals' => [],
 
 			/**
-				@brief		Fixed amount markup of products for using MyCryptoCheckout as the payment.
+				@brief		Fixed amount markup of products for using HarmonyPay as the payment.
 				@since		2017-12-14 16:50:25
 			**/
 			'markup_amount' => 0,
 
 			/**
-				@brief		Percentage markup of products for using MyCryptoCheckout as the payment.
+				@brief		Percentage markup of products for using HarmonyPay as the payment.
 				@since		2017-12-14 16:50:25
 			**/
 			'markup_percent' => 0,
@@ -670,7 +670,7 @@ trait misc_methods_trait
 	{
 		$ago = sprintf( __( '%s ago' ), human_time_diff( $time ) );
 		$text = sprintf( '<span title="%s">%s</span>',
-			MyCryptoCheckout()->local_datetime( $time ),
+			HarmonyPay()->local_datetime( $time ),
 			$ago
 		);
 		return $text;

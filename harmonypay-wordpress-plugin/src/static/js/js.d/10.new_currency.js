@@ -6,15 +6,15 @@
 {
     $.fn.extend(
     {
-        mycryptocheckout_new_currency : function()
+        harmonypay_new_currency : function()
         {
             return this.each( function()
             {
                 var $this = $(this);
 
-                if ( $this.hasClass( 'mycryptocheckout_new_currency' ) )
+                if ( $this.hasClass( 'harmonypay_new_currency' ) )
                 	return;
-                $this.addClass( 'mycryptocheckout_new_currency' );
+                $this.addClass( 'harmonypay_new_currency' );
 
                 // Find the currency selector.
                 $this.$currency_id = $( '.currency_id', $this );

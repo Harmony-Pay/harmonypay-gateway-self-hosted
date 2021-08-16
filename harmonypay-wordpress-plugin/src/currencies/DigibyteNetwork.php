@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 /**
 Public key for tests:

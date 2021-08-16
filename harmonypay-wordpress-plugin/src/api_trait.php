@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		Handles all things related to the api.
@@ -14,8 +14,8 @@ trait api_trait
 	**/
 	public function init_api_trait()
 	{
-		$this->add_action( 'mycryptocheckout_retrieve_account' );
-		$this->add_action( 'mycryptocheckout_send_payment' );
+		$this->add_action( 'harmonypay_retrieve_account' );
+		$this->add_action( 'harmonypay_send_payment' );
 		$this->add_action( 'template_redirect', 'api_template_redirect', 1 );
 	}
 
@@ -28,7 +28,7 @@ trait api_trait
 		if ( isset( $this->__api ) )
 			return $this->__api;
 
-		$this->__api = new \mycryptocheckout\api\v2\wordpress\API();
+		$this->__api = new \harmonypay\api\v2\wordpress\API();
 		return $this->__api;
 	}
 
@@ -46,9 +46,9 @@ trait api_trait
 		@details	Used mostly to update the currency exchange info.
 		@since		2017-12-14 08:08:49
 	**/
-	public function mycryptocheckout_retrieve_account()
+	public function harmonypay_retrieve_account()
 	{
-		$this->debug( 'Action mycryptocheckout_retrieve_account called!' );
+		$this->debug( 'Action harmonypay_retrieve_account called!' );
 		$result = $this->api()->account()->retrieve();
 		if ( $result )
 		{
@@ -64,7 +64,7 @@ trait api_trait
 		@brief		Send a payment to the API.
 		@since		2018-01-02 19:19:21
 	**/
-	public function mycryptocheckout_send_payment( $post_id )
+	public function harmonypay_send_payment( $post_id )
 	{
 		$this->api()->payments()->send( $post_id );
 	}

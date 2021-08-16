@@ -1,0 +1,23 @@
+2.08		20210215
+
+Use MCC API Exception instead of basic Exception.
+
+2.06		20191119
+
+Add test communication function.
+
+2.05		20190613
+
+Return JSON error info.
+
+2.04		20190411
+
+Added preliminary Autosettlement code.
+
+2.03		20181214
+
+harmonypay\api\v2\wordpress	Allow waves data to be passed through.
+
+2.02		20181117
+
+Added HARMONYPAY_PRICING_URL define, in order to override the license purchase URL by referrers.

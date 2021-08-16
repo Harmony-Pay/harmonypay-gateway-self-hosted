@@ -1,13 +1,13 @@
 // Icon font for checkout page
 // old icon style remove in later version
-#payment .wc_payment_methods .payment_method_mycryptocheckout img {
+#payment .wc_payment_methods .payment_method_harmonypay img {
 	max-height: 1.618em;
 	height: 100%;
 	width: auto;
 }
 // current icon styles
-.woocommerce-checkout #payment ul.wc_payment_methods li.payment_method_mycryptocheckout label {
-	.mcc_currency_icons {
+.woocommerce-checkout #payment ul.wc_payment_methods li.payment_method_harmonypay label {
+	.hrp_currency_icons {
 		display: flex;
     flex-wrap: wrap;
     word-break: break-all;

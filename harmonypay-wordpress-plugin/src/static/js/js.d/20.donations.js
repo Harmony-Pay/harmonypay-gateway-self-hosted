@@ -6,7 +6,7 @@
 {
     $.fn.extend(
     {
-        mycryptocheckout_donations_javascript: function()
+        harmonypay_donations_javascript: function()
         {
             return this.each( function()
             {
@@ -26,12 +26,12 @@
                 **/
                 $$.extract_data = function()
                 {
-                	var data = $$.data( 'mycryptocheckout_donations_data' );
+                	var data = $$.data( 'harmonypay_donations_data' );
 					// Convert from base64
 					data = atob( data );
 					// And parse into an object.
 					$$.div_data = jQuery.parseJSON( data );
-					console.log( 'MyCryptoCheckout: Donations div data', $$.div_data );
+					console.log( 'HarmonyPay: Donations div data', $$.div_data );
                 }
 
                 /**
@@ -92,7 +92,7 @@
                 	$.each( $$.div_data[ 'currencies' ], function( index, currency )
                 	{
                 		var $icon = $( '<img>' );
-                		$icon.addClass( 'mcc_donation_icon' );
+                		$icon.addClass( 'hrp_donation_icon' );
                 		$icon.attr( 'src', currency.icon );
                 		$icon.appendTo( $$.icons );
 
@@ -167,7 +167,7 @@
             			return;
             		$$.address.html( address ).show();
             		$$.address.removeClass( 'clipboarded' );
-            		$( '.mycryptocheckout .to_input' ).mcc_make_clipboard();
+            		$( '.harmonypay .to_input' ).hrp_make_clipboard();
                 }
 
                 /**

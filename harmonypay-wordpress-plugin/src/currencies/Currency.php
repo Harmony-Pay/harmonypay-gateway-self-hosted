@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 use Exception;
 
@@ -18,7 +18,7 @@ class Currency
 	public function convert( $currency, $amount )
 	{
 		// The exchange rates are stored in the account.
-		$account = MyCryptoCheckout()->api()->account();
+		$account = HarmonyPay()->api()->account();
 
 		// Do not convert if we are trying to convert from BTC to BTC.
 		if( $currency == $this->get_id() )
@@ -44,7 +44,7 @@ class Currency
 		}
 		
 		$cryptocurrency_amount = $account->get_virtual_exchange_rate( $this->get_id() );
-		//MyCryptoCheckout()->debug('currency : %s - %s - %s - %s', $currency, $usd, $cryptocurrency_amount, $this->get_id());
+		//HarmonyPay()->debug('currency : %s - %s - %s - %s', $currency, $usd, $cryptocurrency_amount, $this->get_id());
 		$cryptocurrency_amount = $usd * $cryptocurrency_amount;
 
 		if ($cryptocurrency_amount > 1) {
@@ -64,12 +64,12 @@ class Currency
 	**/
 	public function find_next_available_amount( $amount )
 	{
-		$account = MyCryptoCheckout()->api()->account();
+		$account = HarmonyPay()->api()->account();
 		$precision = $this->get_decimal_precision();
 
 		// Keep incrementing the account until a "free" amount is found.
 		while( ! $account->is_payment_amount_available( $this->get_id(), $amount ) )
-			$amount = MyCryptoCheckout()->increase_floating_point_number( $amount, $precision );
+			$amount = HarmonyPay()->increase_floating_point_number( $amount, $precision );
 
 		return $amount;
 	}
@@ -107,7 +107,7 @@ class Currency
 		if ( isset( $this->group ) )
 			return $this->group;
 		$g = new Group();
-		$g->name = __( 'Main blockchains', 'mycryptocheckout' );
+		$g->name = __( 'Main blockchains', 'harmonypay' );
 		$g->sort_order = 25;	// First!
 		return $g;
 	}
@@ -268,7 +268,7 @@ class Currency
 			$length = [ $length ];
 		if ( ! in_array( strlen( $address ), $length ) )
 			throw new Exception( sprintf(
-				__( 'The address must be exactly %s characters long.', 'mycryptocheckout' ),
+				__( 'The address must be exactly %s characters long.', 'harmonypay' ),
 				implode( ' or ', $length )
 			) );
 	}

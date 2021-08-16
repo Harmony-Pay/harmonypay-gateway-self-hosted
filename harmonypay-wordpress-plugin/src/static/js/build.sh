@@ -2,7 +2,7 @@
 
 # Just a script that concatenates all of the files in js.s to js.js
 
-OUTPUT="mycryptocheckout.js"
+OUTPUT="harmonypay.js"
 if [ -f "$OUTPUT" ]; then
     rm "$OUTPUT"
 fi

@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\ecommerce\woocommerce;
+namespace harmonypay\ecommerce\woocommerce;
 
 use Exception;
 
@@ -9,13 +9,13 @@ use Exception;
 	@since		2017-12-08 16:30:20
 **/
 class WooCommerce
-	extends \mycryptocheckout\ecommerce\Ecommerce
+	extends \harmonypay\ecommerce\Ecommerce
 {
 	/**
 		@brief		The ID of the gateway.
 		@since		2017-12-08 16:45:27
 	**/
-	public static $gateway_id = 'mycryptocheckout';
+	public static $gateway_id = 'harmonypay';
 
 	/**
 		@brief		Init!
@@ -23,10 +23,10 @@ class WooCommerce
 	**/
 	public function _construct()
 	{
-		$this->add_action( 'mycryptocheckout_hourly' );
-		$this->add_action( 'mycryptocheckout_cancel_payment' );
-		$this->add_action( 'mycryptocheckout_complete_payment' );
-		$this->add_action( 'mycryptocheckout_refund_payment' );
+		$this->add_action( 'harmonypay_hourly' );
+		$this->add_action( 'harmonypay_cancel_payment' );
+		$this->add_action( 'harmonypay_complete_payment' );
+		$this->add_action( 'harmonypay_refund_payment' );
 		$this->add_action( 'template_redirect' );
 		//$this->add_action( 'before_woocommerce_pay' );
 		$this->add_action( 'wcs_new_order_created' );
@@ -59,14 +59,14 @@ class WooCommerce
 		$currency_id = 'ONE';
 
 		// Is MCC installed?
-		if ( ! function_exists( 'mycryptocheckout' ) )
+		if ( ! function_exists( 'harmonypay' ) )
 			return $total_rows;
 
 		if ( ! isset( $total_rows[ 'order_total' ] ) )
 			return $total_rows;
 
 		// Retrieve all of our currencies.
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		$currency = $currencies->get( $currency_id );
 		// Is this currency known?
 		if ( ! $currency )
@@ -91,10 +91,10 @@ class WooCommerce
 	function hpc_woocommerce_get_price_html( $text, $product )
 	{
 		// Is MCC installed?
-		if ( ! function_exists( 'mycryptocheckout' ) )
+		if ( ! function_exists( 'harmonypay' ) )
 			return $text;
 		// Retrieve all of our currencies.
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		// Change this to your preferred currency symbol
 		$show_currency = 'ONE';
 		$currency = $currencies->get( $show_currency );
@@ -116,10 +116,10 @@ class WooCommerce
 		$currency_id = 'ONE';
 		
 		// Is MCC installed?
-		if ( ! function_exists( 'mycryptocheckout' ) )
+		if ( ! function_exists( 'harmonypay' ) )
 			return $text;
 		// Retrieve all of our currencies.
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		$currency = $currencies->get( $currency_id );
 		// Is this currency known?
 		if ( ! $currency )
@@ -157,8 +157,8 @@ class WooCommerce
 			return;
 
 		// Is this an mcc transaction?
-		$mcc_currency_id = $order->get_meta( '_mcc_currency_id' );
-		if ( ! $mcc_currency_id )
+		$hrp_currency_id = $order->get_meta( '_hrp_currency_id' );
+		if ( ! $hrp_currency_id )
 			return;
 
 		// And now redirect the buyer to the correct page.
@@ -175,7 +175,7 @@ class WooCommerce
 	public function check_decimal_setting()
 	{
 		$wc_currency = get_woocommerce_currency();
-		$currency = MyCryptoCheckout()->currencies()->get( $wc_currency );
+		$currency = HarmonyPay()->currencies()->get( $wc_currency );
 		if ( ! $currency )
 			return;
 		// Get the WC decimal precision.
@@ -192,14 +192,14 @@ class WooCommerce
 	**/
 	public function is_available_for_payment()
 	{
-		$account = MyCryptoCheckout()->api()->account();
+		$account = HarmonyPay()->api()->account();
 		$account->is_available_for_payment();
 
 		// We need to be able to convert this currency.
 		$wc_currency = get_woocommerce_currency();
 
 		// Do we know about this virtual currency?
-		$wallet = MyCryptoCheckout()->wallets()->get_dustiest_wallet( $wc_currency );
+		$wallet = HarmonyPay()->wallets()->get_dustiest_wallet( $wc_currency );
 		if ( ! $wallet )
 			if ( ! $account->get_physical_exchange_rate( $wc_currency ) )
 				throw new Exception( sprintf( 'Your WooCommerce installation is using an unknown currency: %s', $wc_currency ) );
@@ -211,13 +211,13 @@ class WooCommerce
 		@brief		Hourly cron.
 		@since		2017-12-24 12:10:14
 	**/
-	public function mycryptocheckout_hourly()
+	public function harmonypay_hourly()
 	{
 		if ( ! function_exists( 'WC' ) )
 			return;
 		try
 		{
-			MyCryptoCheckout()->api()->payments()->send_unsent_payments();
+			HarmonyPay()->api()->payments()->send_unsent_payments();
 		}
 		catch( Exception $e )
 		{
@@ -229,7 +229,7 @@ class WooCommerce
 		@brief		Payment was abanadoned.
 		@since		2018-01-06 15:59:11
 	**/
-	public function mycryptocheckout_cancel_payment( $action )
+	public function harmonypay_cancel_payment( $action )
 	{
 		$this->do_with_payment_action( $action, function( $action, $order_id )
 		{
@@ -245,9 +245,9 @@ class WooCommerce
 
 			// Only cancel is the order is unpaid.
 			if ( $order->get_status() != 'pending' )
-				return MyCryptoCheckout()->debug( 'WC order %d on blog %d is not unpaid. Can not cancel.', $order_id, get_current_blog_id() );
+				return HarmonyPay()->debug( 'WC order %d on blog %d is not unpaid. Can not cancel.', $order_id, get_current_blog_id() );
 
-			MyCryptoCheckout()->debug( 'Marking WC payment %s on blog %d as cancelled.', $order_id, get_current_blog_id() );
+			HarmonyPay()->debug( 'Marking WC payment %s on blog %d as cancelled.', $order_id, get_current_blog_id() );
 			$order->update_status( 'cancelled', 'Payment timed out.' );
 			do_action( 'woocommerce_cancelled_order', $order->get_id() );
 		} );
@@ -258,7 +258,7 @@ class WooCommerce
 		@brief		Refund payment.
 		@since		2018-01-06 15:59:11
 	**/
-	public function mycryptocheckout_refund_payment( $payment, $refund_reason = '' )
+	public function harmonypay_refund_payment( $payment, $refund_reason = '' )
 	{
 		$this->do_with_payment_action( $payment, function( $action, $order_id )
 		{
@@ -275,7 +275,7 @@ class WooCommerce
 
 			// Only cancel is the order is unpaid.
 			if ( $order->get_status() == 'refunded' )
-				return MyCryptoCheckout()->debug( 'WC order %d on blog %d has been already refunded.', $order_id, get_current_blog_id() );
+				return HarmonyPay()->debug( 'WC order %d on blog %d has been already refunded.', $order_id, get_current_blog_id() );
 			
 			// Get Items
 			$order_items = $order->get_items();
@@ -320,7 +320,7 @@ class WooCommerce
 				'refund_payment' => true
 				));
 
-			MyCryptoCheckout()->debug( 'Marking WC payment %s on blog %d as refunded.', $order_id, get_current_blog_id() );
+			HarmonyPay()->debug( 'Marking WC payment %s on blog %d as refunded.', $order_id, get_current_blog_id() );
 			$order->update_status( 'refunded', 'Payment Refunded.' );
 			do_action( 'woocommerce_refunded_order', $order->get_id(), $refund->get_id() );
 			return $refund;
@@ -328,10 +328,10 @@ class WooCommerce
 	}
 
 	/**
-		@brief		mycryptocheckout_complete_payment
+		@brief		harmonypay_complete_payment
 		@since		2017-12-26 10:17:13
 	**/
-	public function mycryptocheckout_complete_payment( $payment )
+	public function harmonypay_complete_payment( $payment )
 	{
 		$this->do_with_payment_action( $payment, function( $action, $order_id )
 		{
@@ -347,17 +347,17 @@ class WooCommerce
 
 			$payment = $action->payment;
 
-			MyCryptoCheckout()->debug( 'Marking WC payment %s on blog %d as paid.', $order_id, get_current_blog_id() );
+			HarmonyPay()->debug( 'Marking WC payment %s on blog %d as paid.', $order_id, get_current_blog_id() );
 			$order->payment_complete( $payment->transaction_id );
 
 			// Since WC is not yet loaded properly, we have to load the gateway settings ourselves.
-			$options = get_option( 'woocommerce_mycryptocheckout_settings', true );
+			$options = get_option( 'woocommerce_harmonypay_settings', true );
 			$options = maybe_unserialize( $options );
 			if ( isset( $options[ 'payment_complete_status' ] ) )
 				if ( $options[ 'payment_complete_status' ] != '' )
 				{
 					// The default is '', which means don't do anything.
-					MyCryptoCheckout()->debug( 'Marking WC payment %s on blog %d as %s.',
+					HarmonyPay()->debug( 'Marking WC payment %s on blog %d as %s.',
 						$order_id,
 						get_current_blog_id(),
 						$options[ 'payment_complete_status' ]
@@ -391,8 +391,8 @@ class WooCommerce
 			return;
 
 		// Is this an mcc transaction?
-		$mcc_currency_id = $order->get_meta( '_mcc_currency_id' );
-		if ( ! $mcc_currency_id )
+		$hrp_currency_id = $order->get_meta( '_hrp_currency_id' );
+		if ( ! $hrp_currency_id )
 			return;
 
 		// And now redirect the buyer to the correct page.
@@ -408,8 +408,8 @@ class WooCommerce
 	**/
 	public function wcs_new_order_created( $order )
 	{
-		MyCryptoCheckout()->debug( 'Deleting payment ID for subscription order %s', $order->get_id() );
-		$order->delete_meta_data( '_mcc_payment_id' );
+		HarmonyPay()->debug( 'Deleting payment ID for subscription order %s', $order->get_id() );
+		$order->delete_meta_data( '_hrp_payment_id' );
 		$order->save();
 		return $order;
 	}
@@ -420,14 +420,14 @@ class WooCommerce
 	**/
 	public function wcs_renewal_order_meta( $order_meta )
 	{
-		MyCryptoCheckout()->debug( 'Order meta %s', $order_meta );
+		HarmonyPay()->debug( 'Order meta %s', $order_meta );
 		foreach( $order_meta as $index => $meta )
 		{
 			// Remove all MCC meta.
-			if ( strpos( $meta[ 'meta_key' ], '_mcc_' ) === 0 )
+			if ( strpos( $meta[ 'meta_key' ], '_hrp_' ) === 0 )
 				unset( $order_meta[ $index ] );
 		}
-		MyCryptoCheckout()->debug( 'Order meta %s', $order_meta );
+		HarmonyPay()->debug( 'Order meta %s', $order_meta );
 		return $order_meta;
 	}
 
@@ -440,23 +440,23 @@ class WooCommerce
 		if ( $order->get_payment_method() != static::$gateway_id )
 			return;
 
-		$amount = $order->get_meta( '_mcc_amount' );
+		$amount = $order->get_meta( '_hrp_amount' );
 
 		$r = '';
 		$r .= sprintf( '<h3>%s</h3>',
-			__( 'MyCryptoCheckout details', 'woocommerce' )
+			__( 'HarmonyPay details', 'woocommerce' )
 		);
 
-		$attempts = $order->get_meta( '_mcc_attempts' );
-		$payment_id = $order->get_meta( '_mcc_payment_id' );
+		$attempts = $order->get_meta( '_hrp_attempts' );
+		$payment_id = $order->get_meta( '_hrp_payment_id' );
 
 		if ( $payment_id > 0 )
 		{
 			if ( $payment_id == 1 )
-				$payment_id = __( 'Test', 'mycryptocheckout' );
+				$payment_id = __( 'Test', 'harmonypay' );
 			$r .= sprintf( '<p class="form-field form-field-wide">%s</p>',
 				// Expecting 123 BTC to xyzabc
-				sprintf( __( 'MyCryptoCheckout payment ID: %s', 'mycryptocheckout'),
+				sprintf( __( 'HarmonyPay payment ID: %s', 'harmonypay'),
 					$payment_id
 				)
 			);
@@ -465,7 +465,7 @@ class WooCommerce
 		{
 			if ( $attempts > 0 )
 				$r .= sprintf( '<p class="form-field form-field-wide">%s</p>',
-					sprintf( __( '%d attempts made to contact the API server.', 'mycryptocheckout'),
+					sprintf( __( '%d attempts made to contact the API server.', 'harmonypay'),
 						$attempts
 					)
 				);
@@ -474,20 +474,20 @@ class WooCommerce
 		if ( $order->is_paid() )
 			$r .= sprintf( '<p class="form-field form-field-wide">%s</p>',
 				// Received 123 BTC to xyzabc
-				sprintf( __( 'Received %s&nbsp;%s<br/>to %s', 'mycryptocheckout'),
+				sprintf( __( 'Received %s&nbsp;%s<br/>to %s', 'harmonypay'),
 					$amount,
-					$order->get_meta( '_mcc_currency_id' ),
-					$order->get_meta( '_mcc_to' )
+					$order->get_meta( '_hrp_currency_id' ),
+					$order->get_meta( '_hrp_to' )
 				)
 			);
 		else
 		{
 			$r .= sprintf( '<p class="form-field form-field-wide">%s</p>',
 				// Expecting 123 BTC to xyzabc
-				sprintf( __( 'Expecting %s&nbsp;%s<br/>to %s', 'mycryptocheckout'),
+				sprintf( __( 'Expecting %s&nbsp;%s<br/>to %s', 'harmonypay'),
 					$amount,
-					$order->get_meta( '_mcc_currency_id' ),
-					$order->get_meta( '_mcc_to' )
+					$order->get_meta( '_hrp_currency_id' ),
+					$order->get_meta( '_hrp_to' )
 				)
 			);
 		}
@@ -502,11 +502,11 @@ class WooCommerce
 	public function woocommerce_order_status_cancelled( $order_id )
 	{
 		$order = wc_get_order( $order_id );
-		$payment_id = $order->get_meta( '_mcc_payment_id' );
+		$payment_id = $order->get_meta( '_hrp_payment_id' );
 		if ( $payment_id < 2 )		// 1 is for test mode.
 			return;
-		MyCryptoCheckout()->debug( 'Cancelling payment %d for order %s', $payment_id, $order_id );
-		MyCryptoCheckout()->api()->payments()->cancel( $payment_id );
+		HarmonyPay()->debug( 'Cancelling payment %d for order %s', $payment_id, $order_id );
+		HarmonyPay()->api()->payments()->cancel( $payment_id );
 	}
 
 	/**
@@ -516,11 +516,11 @@ class WooCommerce
 	public function woocommerce_order_status_refunded( $order_id )
 	{
 		$order = wc_get_order( $order_id );
-		$payment_id = $order->get_meta( '_mcc_payment_id' );
+		$payment_id = $order->get_meta( '_hrp_payment_id' );
 		if ( $payment_id < 2 )		// 1 is for test mode.
 			return;
-		MyCryptoCheckout()->debug( 'Refunding payment %d for order %s', $payment_id, $order_id );
-		MyCryptoCheckout()->api()->payments()->refund( $payment_id );
+		HarmonyPay()->debug( 'Refunding payment %d for order %s', $payment_id, $order_id );
+		HarmonyPay()->api()->payments()->refund( $payment_id );
 	}
 
 	/**
@@ -530,11 +530,11 @@ class WooCommerce
 	public function woocommerce_order_status_completed( $order_id )
 	{
 		$order = wc_get_order( $order_id );
-		$payment_id = $order->get_meta( '_mcc_payment_id' );
+		$payment_id = $order->get_meta( '_hrp_payment_id' );
 		if ( $payment_id < 2 )		// 1 is for test mode.
 			return;
-		MyCryptoCheckout()->debug( 'Completing payment %d for order %s', $payment_id, $order_id );
-		MyCryptoCheckout()->api()->payments()->complete( $payment_id );
+		HarmonyPay()->debug( 'Completing payment %d for order %s', $payment_id, $order_id );
+		HarmonyPay()->api()->payments()->complete( $payment_id );
 	}
 
 	/**
@@ -546,18 +546,18 @@ class WooCommerce
 		if ( $order->get_payment_method() != static::$gateway_id )
 			return;
 
-		$account = MyCryptoCheckout()->api()->account();
+		$account = HarmonyPay()->api()->account();
 		$available_for_payment = $account->is_available_for_payment();
 
-		MyCryptoCheckout()->debug( 'Creating order! Available: %d', $available_for_payment );
+		HarmonyPay()->debug( 'Creating order! Available: %d', $available_for_payment );
 
-		$currency_id = sanitize_text_field( $_POST[ 'mcc_currency_id' ] );
+		$currency_id = sanitize_text_field( $_POST[ 'hrp_currency_id' ] );
 
 		// Get the gateway instance.
-		$gateway = \WC_Gateway_MyCryptoCheckout::instance();
+		$gateway = \WC_Gateway_HarmonyPay::instance();
 
 		// All of the below is just to calculate the amount.
-		$mcc = MyCryptoCheckout();
+		$mcc = HarmonyPay();
 
 		$order_total = $order->get_total();
 		$currencies = $mcc->currencies();
@@ -572,16 +572,16 @@ class WooCommerce
 			'amount' => $order_total,
 			'currency_id' => $currency_id,
 		] );
-		MyCryptoCheckout()->debug( 'Marking up total: %s %s -> %s', $order_total, $woocommerce_currency, $amount );
+		HarmonyPay()->debug( 'Marking up total: %s %s -> %s', $order_total, $woocommerce_currency, $amount );
 		$amount = $currency->convert( $woocommerce_currency, $amount );
 		if ( $amount == 0 )
 		{
 
-			$account = MyCryptoCheckout()->api()->account();
-			MyCryptoCheckout()->debug( 'Error with conversion! %s', $account );
+			$account = HarmonyPay()->api()->account();
+			HarmonyPay()->debug( 'Error with conversion! %s', $account );
 		}
 		else
-			MyCryptoCheckout()->debug( 'Conversion: %s', $amount );
+			HarmonyPay()->debug( 'Conversion: %s', $amount );
 		$next_amount = $amount;
 		$precision = $currency->get_decimal_precision();
 
@@ -593,17 +593,17 @@ class WooCommerce
 		for( $counter = 0; $counter < $spread ; $counter++ )
 		{
 			// Help find_next_available_amount by increasing the value by 1.
-			$next_amount = MyCryptoCheckout()->increase_floating_point_number( $next_amount, $precision );
+			$next_amount = HarmonyPay()->increase_floating_point_number( $next_amount, $precision );
 			// And now find the next amount.
 			$next_amounts []= $next_amount;
 		}
 
-		MyCryptoCheckout()->debug( 'Next amounts: %s', $next_amounts );
+		HarmonyPay()->debug( 'Next amounts: %s', $next_amounts );
 
 		// Select a next amount at random.
 		$amount = $next_amounts[ array_rand( $next_amounts ) ];
 
-		MyCryptoCheckout()->debug( 'Amount selected: %s', $amount );
+		HarmonyPay()->debug( 'Amount selected: %s', $amount );
 
 		// Are we paying in the same currency as the native currency?
 		if ( $currency_id == get_woocommerce_currency() )
@@ -613,7 +613,7 @@ class WooCommerce
 			$order->save();
 		}
 
-		$payment = MyCryptoCheckout()->api()->payments()->create_new();
+		$payment = HarmonyPay()->api()->payments()->create_new();
 		$payment->amount = $amount;
 		$payment->currency_id = $currency_id;
 
@@ -625,26 +625,26 @@ class WooCommerce
 		}
 		else
 			$payment_id = 0;		// 0 = not sent.
-		$order->update_meta_data( '_mcc_payment_id', $payment_id );
+		$order->update_meta_data( '_hrp_payment_id', $payment_id );
 
 		// Save the non-default payment timeout hours.
 		$payment->timeout_hours = intval( $gateway->get_option( 'payment_timeout_hours' ) );
 
 		$wallet->apply_to_payment( $payment );
-		MyCryptoCheckout()->autosettlements()->apply_to_payment( $payment );
+		HarmonyPay()->autosettlements()->apply_to_payment( $payment );
 
-		MyCryptoCheckout()->debug( 'Payment as created: %s', $payment );
+		HarmonyPay()->debug( 'Payment as created: %s', $payment );
 
 		// This stuff should be handled by the Payment object, but the order doesn't exist yet...
-		$order->update_meta_data( '_mcc_amount', $payment->amount );
-		$order->update_meta_data( '_mcc_confirmations', $payment->confirmations );
-		$order->update_meta_data( '_mcc_created_at', $payment->created_at );
-		$order->update_meta_data( '_mcc_currency_id', $payment->currency_id );
-		$order->update_meta_data( '_mcc_payment_timeout_hours', $payment->timeout_hours );
-		$order->update_meta_data( '_mcc_to', $payment->to );
-		$order->update_meta_data( '_mcc_payment_data', $payment->data );
+		$order->update_meta_data( '_hrp_amount', $payment->amount );
+		$order->update_meta_data( '_hrp_confirmations', $payment->confirmations );
+		$order->update_meta_data( '_hrp_created_at', $payment->created_at );
+		$order->update_meta_data( '_hrp_currency_id', $payment->currency_id );
+		$order->update_meta_data( '_hrp_payment_timeout_hours', $payment->timeout_hours );
+		$order->update_meta_data( '_hrp_to', $payment->to );
+		$order->update_meta_data( '_hrp_payment_data', $payment->data );
 
-		$action = MyCryptoCheckout()->new_action( 'woocommerce_create_order' );
+		$action = HarmonyPay()->new_action( 'woocommerce_create_order' );
 		$action->order = $order;
 		$action->payment = $payment;
 		$action->execute();
@@ -662,12 +662,12 @@ class WooCommerce
 		$order = wc_get_order( $order_id );
 		if ( $order->get_payment_method() != static::$gateway_id )
 			return;
-		if ( $order->get_meta( '_mcc_payment_id' ) != 0 )
+		if ( $order->get_meta( '_hrp_payment_id' ) != 0 )
 			return;
-		do_action( 'mycryptocheckout_send_payment', $order_id );
-		do_action( 'mycryptocheckout_woocommerce_order_created', $order );
+		do_action( 'harmonypay_send_payment', $order_id );
+		do_action( 'harmonypay_woocommerce_order_created', $order );
 
-		$gateway = \WC_Gateway_MyCryptoCheckout::instance();
+		$gateway = \WC_Gateway_HarmonyPay::instance();
 		$send_new_order_invoice = $gateway->get_option( 'send_new_order_invoice' );
 		if ( $send_new_order_invoice != 'no' )
 			WC()->mailer()->customer_invoice( $order );
@@ -679,12 +679,12 @@ class WooCommerce
 	**/
 	public function woocommerce_currencies( $currencies )
 	{
-		$wallets = mycryptocheckout()->wallets();
-		$mcc_currencies = mycryptocheckout()->currencies();
+		$wallets = harmonypay()->wallets();
+		$hrp_currencies = harmonypay()->currencies();
 		foreach( $wallets as $wallet )
 		{
 			$currency_id = $wallet->get_currency_id();
-			$name = $mcc_currencies->get( $currency_id )->get_name();
+			$name = $hrp_currencies->get( $currency_id )->get_name();
 			$currencies[ $currency_id ] = $name;
 		}
 		return $currencies;
@@ -696,8 +696,8 @@ class WooCommerce
 	**/
 	public function woocommerce_currency_symbol( $currency_symbol, $currency )
 	{
-		$mcc_currencies = mycryptocheckout()->currencies();
-		if ( ! $mcc_currencies->has( $currency ) )
+		$hrp_currencies = harmonypay()->currencies();
+		if ( ! $hrp_currencies->has( $currency ) )
 			return $currency_symbol;
 		return $currency;
 	}
@@ -709,7 +709,7 @@ class WooCommerce
 	public function woocommerce_get_checkout_payment_url( $url, $order )
 	{
 		// We only override the payment URL for orders that are handled by us.
-		if ( $order->get_meta( '_mcc_payment_id' ) < 1 )
+		if ( $order->get_meta( '_hrp_payment_id' ) < 1 )
 			return $url;
 		return $order->get_checkout_order_received_url();
 	}
@@ -722,11 +722,11 @@ class WooCommerce
 	{
 		try
 		{
-			MyCryptoCheckout()->woocommerce->check_decimal_setting();
+			HarmonyPay()->woocommerce->check_decimal_setting();
 		}
 		catch ( Exception $e )
 		{
-			echo MyCryptoCheckout()->error_message_box()->text( $e->getMessage() );
+			echo HarmonyPay()->error_message_box()->text( $e->getMessage() );
 		}
 	}
 
@@ -736,8 +736,8 @@ class WooCommerce
 	**/
 	public function woocommerce_payment_gateways( $gateways )
 	{
-		require_once( __DIR__ . '/WC_Gateway_MyCryptoCheckout.php' );
-		$gateways []= 'WC_Gateway_MyCryptoCheckout';
+		require_once( __DIR__ . '/WC_Gateway_HarmonyPay.php' );
+		$gateways []= 'WC_Gateway_HarmonyPay';
 		return $gateways;
 	}
 
@@ -747,6 +747,6 @@ class WooCommerce
 	**/
 	public function woocommerce_review_order_before_payment()
 	{
-		echo '<style>.wc_payment_method #mcc_currency_id_field select#mcc_currency_id { width: 100%; }</style>';
+		echo '<style>.wc_payment_method #hrp_currency_id_field select#hrp_currency_id { width: 100%; }</style>';
 	}
 }

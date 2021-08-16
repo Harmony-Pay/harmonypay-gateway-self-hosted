@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 use \Exception;
 
@@ -19,36 +19,36 @@ trait payment_timer_trait
 	{
 		$payment_timer_enabled = $form->select( 'payment_timer_enabled' )
 			// Input description.
-			->description( __( 'Enable a payment timer on the order confirmation page.', 'mycryptocheckout' ) )
+			->description( __( 'Enable a payment timer on the order confirmation page.', 'harmonypay' ) )
 			// Input label.
-			->label( __( 'Payment timer status', 'mycryptocheckout' ) );
+			->label( __( 'Payment timer status', 'harmonypay' ) );
 
 
 		$payment_timer_html = $form->textarea( 'payment_timer_html' )
 			// Input description.
-			->description( __( 'This is the HTML code used to display the payment timer. Leave empty to use the default value.', 'mycryptocheckout' ) )
+			->description( __( 'This is the HTML code used to display the payment timer. Leave empty to use the default value.', 'harmonypay' ) )
 			// Input label.
-			->label( __( 'Payment timer HTML', 'mycryptocheckout' ) )
+			->label( __( 'Payment timer HTML', 'harmonypay' ) )
 			->rows( 5, 40 );
 
 		if ( isset( $form->form()->local_settings ) )
 		{
-			$payment_timer_enabled->opt( 'enabled', __( 'Enabled', 'mycryptocheckout' ) );
-			$payment_timer_enabled->opt( 'disabled', __( 'Disabled', 'mycryptocheckout' ) );
+			$payment_timer_enabled->opt( 'enabled', __( 'Enabled', 'harmonypay' ) );
+			$payment_timer_enabled->opt( 'disabled', __( 'Disabled', 'harmonypay' ) );
 			// Local
 			$payment_timer_enabled->value( $this->get_local_option( 'payment_timer_enabled' ) );
 			$payment_timer_html->value( $this->get_local_global_file_option( 'payment_timer_html' ) );
 
 			if ( $this->is_network )
-				$payment_timer_enabled->opt( 'auto', __( 'Use network admin default', 'mycryptocheckout' ) );
+				$payment_timer_enabled->opt( 'auto', __( 'Use network admin default', 'harmonypay' ) );
 		}
 		else
 		{
 			// Global
-			$payment_timer_enabled->opt( 'enabled_all', __( 'Enabled on all sites', 'mycryptocheckout' ) );
-			$payment_timer_enabled->opt( 'disabled_all', __( 'Disabled on all sites', 'mycryptocheckout' ) );
-			$payment_timer_enabled->opt( 'default_enabled', __( 'Default enabled on all sites', 'mycryptocheckout' ) );
-			$payment_timer_enabled->opt( 'default_disabled', __( 'Default disabled on all sites', 'mycryptocheckout' ) );
+			$payment_timer_enabled->opt( 'enabled_all', __( 'Enabled on all sites', 'harmonypay' ) );
+			$payment_timer_enabled->opt( 'disabled_all', __( 'Disabled on all sites', 'harmonypay' ) );
+			$payment_timer_enabled->opt( 'default_enabled', __( 'Default enabled on all sites', 'harmonypay' ) );
+			$payment_timer_enabled->opt( 'default_disabled', __( 'Default disabled on all sites', 'harmonypay' ) );
 
 			$payment_timer_enabled->value( $this->get_site_option( 'payment_timer_enabled' ) );
 			$payment_timer_html->value( $this->get_global_file_option( 'payment_timer_html' ) );

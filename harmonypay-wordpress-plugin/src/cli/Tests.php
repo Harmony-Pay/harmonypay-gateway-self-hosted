@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\cli;
+namespace harmonypay\cli;
 
 use Exception;
 use WP_CLI;
@@ -52,8 +52,8 @@ class Tests
 	**/
 	public function test_hd_wallets()
 	{
-		$currencies = MyCryptoCheckout()->currencies();
-		$wallets = MyCryptoCheckout()->wallets();
+		$currencies = HarmonyPay()->currencies();
+		$wallets = HarmonyPay()->wallets();
 
 		foreach( [
 			'BTC' => [
@@ -177,8 +177,8 @@ class Tests
 	**/
 	public function test_wallets()
 	{
-		$currencies = MyCryptoCheckout()->currencies();
-		$wallets = MyCryptoCheckout()->wallets();
+		$currencies = HarmonyPay()->currencies();
+		$wallets = HarmonyPay()->wallets();
 
 		foreach( [
 			[

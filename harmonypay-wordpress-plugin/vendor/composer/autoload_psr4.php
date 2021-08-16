@@ -8,8 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'plainview\\sdk_mcc\\' => array($vendorDir . '/plainview/sdk'),
     'phpEther\\' => array($vendorDir . '/arizn/phpether'),
-    'mycryptocheckout\\api\\' => array($vendorDir . '/mycryptocheckout/api/src'),
-    'mycryptocheckout\\' => array($baseDir . '/src'),
+    'harmonypay\\api\\' => array($vendorDir . '/harmonypay/api/src'),
+    'harmonypay\\' => array($baseDir . '/src'),
     'Mdanter\\Ecc\\' => array($vendorDir . '/mdanter/ecc/src'),
     'FG\\' => array($vendorDir . '/fgrosse/phpasn1/lib'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),

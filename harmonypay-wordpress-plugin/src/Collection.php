@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		Convenience class so that we don't have to keep referring to the whole SDK path.

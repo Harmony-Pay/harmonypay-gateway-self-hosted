@@ -1,16 +1,16 @@
 <?php
 
-namespace mycryptocheckout\wallets;
+namespace harmonypay\wallets;
 
 /**
 	@brief		A wallet.
 	@since		2017-12-09 09:02:26
 **/
 class Wallet
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
-	use \mycryptocheckout\traits\network_available;
-	use \mycryptocheckout\traits\label_for_item;
+	use \harmonypay\traits\network_available;
+	use \harmonypay\traits\label_for_item;
 
 	/**
 		@brief		The wallet's address.
@@ -20,7 +20,7 @@ class Wallet
 
 	/**
 		@brief		Which currency the wallet belongs to.
-		@see		MyCryptoCheckout\currencies_trait
+		@see		HarmonyPay\currencies_trait
 		@since		2017-12-09 09:06:07
 	**/
 	public $currency_id = '';
@@ -66,9 +66,9 @@ class Wallet
 		$payment->to = $this->get_address();
 
 		// Find this wallet in the user's wallets.
-		$currencies = MyCryptoCheckout()->currencies();
+		$currencies = HarmonyPay()->currencies();
 		$currency = $currencies->get( $this->currency_id );
-		$wallets = MyCryptoCheckout()->wallets();
+		$wallets = HarmonyPay()->wallets();
 		foreach( $wallets as $wallet )
 		{
 			if ( $wallet != $this )
@@ -124,7 +124,7 @@ class Wallet
 		$r = [];
 
 		if ( ! $this->enabled )
-			$r []= __( 'This wallet is disabled.', 'mycryptocheckout' );
+			$r []= __( 'This wallet is disabled.', 'harmonypay' );
 
 		if ( $this->label != '' )
 			$r []= $this->label;
@@ -134,21 +134,21 @@ class Wallet
 		if ( $this->confirmations > 1 )
 			$r []= sprintf(
 				// Used 123 times
-				__( '%d confirmations', 'mycryptocheckout' ),
+				__( '%d confirmations', 'harmonypay' ),
 				$this->confirmations
 			);
 
 		if ( $this->last_used > 0 )
 			$r []= sprintf(
 				// Used 123 times
-				__( 'Last used %s', 'mycryptocheckout' ),
-				( MyCryptoCheckout()->local_datetime( $this->last_used ) )
+				__( 'Last used %s', 'harmonypay' ),
+				( HarmonyPay()->local_datetime( $this->last_used ) )
 			);
 
 		if ( $this->times_used > 0 )
 			$r []= sprintf(
 				// Used 123 times
-				__( 'Used %d times', 'mycryptocheckout' ),
+				__( 'Used %d times', 'harmonypay' ),
 				$this->times_used
 			);
 
@@ -196,10 +196,10 @@ class Wallet
 		$this->last_used = time();
 		$this->times_used++;
 
-		$action = MyCryptoCheckout()->new_action( 'use_wallet' );
-		$action->currencies = MyCryptoCheckout()->currencies();
+		$action = HarmonyPay()->new_action( 'use_wallet' );
+		$action->currencies = HarmonyPay()->currencies();
 		$action->currency = $action->currencies->get( $this->currency_id );
-		$action->wallets = MyCryptoCheckout()->wallets();
+		$action->wallets = HarmonyPay()->wallets();
 		foreach( $action->wallets as $wallet )
 			if ( $wallet == $this )
 				$action->wallet = $wallet;

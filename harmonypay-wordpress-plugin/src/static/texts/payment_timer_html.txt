@@ -1,10 +1,10 @@
-<div class="mcc_payment_timer">
+<div class="hrp_payment_timer">
 	<div class="timer">
 		<p>Awaiting payment<br>
 		<span class="timer_check_text">(checked every 15 secs)</span></p>
 		<span class="hours_minutes">--:--</span>
 	</div>
-	<div class="paid mcc_hidden">
+	<div class="paid hrp_hidden">
 		<div id="icon-check"></div>
 		<p>Payment complete!</p>
 	</div>

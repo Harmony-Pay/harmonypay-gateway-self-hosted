@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		Class for handling expired license notifications and dismissals.
@@ -38,7 +38,7 @@ class Expired_License
 	**/
 	public function dismissals()
 	{
-		return MyCryptoCheckout()->get_site_option( 'expired_license_nag_dismissals' );
+		return HarmonyPay()->get_site_option( 'expired_license_nag_dismissals' );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Expired_License
 	**/
 	public function get_dismissal_key( $notification_id )
 	{
-		$key = md5( AUTH_SALT . $notification_id . 'mcc_dismiss_notification' );
+		$key = md5( AUTH_SALT . $notification_id . 'hrp_dismiss_notification' );
 		$key = substr( $key, 0, 8 );
 		return $key;
 	}
@@ -66,9 +66,9 @@ class Expired_License
 			if ( $dismissed )
 				continue;
 			$key = $this->get_dismissal_key( $dismissal );
-			if ( ! isset( $_GET[ 'mcc_dismiss_notification' ] ) )
+			if ( ! isset( $_GET[ 'hrp_dismiss_notification' ] ) )
 				continue;
-			if ( $_GET[ 'mcc_dismiss_notification' ] != $key )
+			if ( $_GET[ 'hrp_dismiss_notification' ] != $key )
 				continue;
 			$dismissals[ $dismissal ] = time();
 			$save = true;
@@ -84,7 +84,7 @@ class Expired_License
 	**/
 	public function save_dismissals( $dismissals )
 	{
-		return MyCryptoCheckout()->update_site_option( 'expired_license_nag_dismissals', $dismissals );
+		return HarmonyPay()->update_site_option( 'expired_license_nag_dismissals', $dismissals );
 	}
 
 	/**
@@ -105,8 +105,8 @@ class Expired_License
 			add_action( 'admin_notices', function() use ( $key )
 			{
 				$class = 'notice notice-warning';
-				$message = sprintf( 'Your MyCryptoCheckout license has expired! If you wish to renew it, please visit your <a href="options-general.php?page=mycryptocheckout">account settings</a>. Or you can <a href="%s">dismiss this notice</a>.',
-					add_query_arg( 'mcc_dismiss_notification', $key )
+				$message = sprintf( 'Your HarmonyPay license has expired! If you wish to renew it, please visit your <a href="options-general.php?page=harmonypay">account settings</a>. Or you can <a href="%s">dismiss this notice</a>.',
+					add_query_arg( 'hrp_dismiss_notification', $key )
 				);
 
 				printf( '<div class="%1$s"><p>%2$s</p></div>',

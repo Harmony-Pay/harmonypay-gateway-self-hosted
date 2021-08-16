@@ -1,4 +1,4 @@
-.mycryptocheckout.online_payment_instructions {
+.harmonypay.online_payment_instructions {
 	display: block;
 	border: 1px solid #aaa;
 	border-radius: 5px;
@@ -21,17 +21,17 @@
 		margin-bottom: 15px;
 	}
 	// Payment page payment box inner padding
-	.mcc_online_pay_box {
+	.hrp_online_pay_box {
 		padding: 10px;
 	}
 	// Payment page timer
-	.mcc_payment_timer {
+	.hrp_payment_timer {
 		text-align: center;
 		display: inline-block;
 		vertical-align: top;
 		margin-bottom: 15px;
 
-		.paid.mcc_hidden {
+		.paid.hrp_hidden {
 			display: none;
 		}
 		.timer {
@@ -60,7 +60,7 @@
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+LnN0MHtmaWxsOiMwMDgwMDE7fTwvc3R5bGU+PHBhdGggY2xhc3M9InN0MCIgZD0iTTg4LDMwLjNMNzUuMSwxNy40Yy0wLjUtMC41LTEuMS0wLjctMS43LTAuN2MtMC42LDAtMS4zLDAuMy0xLjcsMC43TDM3LjQsNTEuN2wtOS4xLTkuMWMtMC45LTAuOS0yLjUtMC45LTMuNCwwTDEyLDU1LjVjLTAuNSwwLjUtMC43LDEuMS0wLjcsMS43czAuMywxLjMsMC43LDEuN2wyMy42LDIzLjZjMC41LDAuNSwxLjEsMC43LDEuNywwLjdjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMC4xLDBjMC42LDAsMS4yLTAuMiwxLjctMC43TDg4LDMzLjdDODksMzIuOCw4OSwzMS4zLDg4LDMwLjN6Ii8+PC9zdmc+);
 	}
 	// Payment page QR code
-	.mcc_qr_code {
+	.hrp_qr_code {
 		margin-bottom: 1em;
 		margin-right: 20px;
 		display: inline-block;
@@ -72,13 +72,13 @@
 		}
 	}
 	// 7 Theme styles
-	.wf-wrap .wf-container-main #content .woocommerce .wc-complete-wrap .wc-side-column .mycryptocheckout .to .to_input.clipboardable {
+	.wf-wrap .wf-container-main #content .woocommerce .wc-complete-wrap .wc-side-column .harmonypay .to .to_input.clipboardable {
 		font-size: 12px;
 	}
 }
 
 // Payment page address and amount inputs
-.mycryptocheckout {
+.harmonypay {
 	.to .to_input input {
 		max-width: 510px;
 		margin-bottom: 5px;
@@ -114,7 +114,7 @@
 		text-overflow: ellipsis;
 		-o-text-overflow: ellipsis;
 	}
-	.mcc_woocommerce_clipboard {
+	.hrp_woocommerce_clipboard {
 		cursor: pointer;
 		position: absolute;
 		right: 0;

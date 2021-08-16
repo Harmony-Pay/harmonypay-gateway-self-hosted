@@ -1,11 +1,11 @@
 <?php
 
-namespace mycryptocheckout\traits;
+namespace harmonypay\traits;
 
 /**
 	@brief		Functions common to things that can be network enabled and on specific sites.
-	@see		\mycryptocheckout\autosettlements\Autosettlement
-	@see		\mycryptocheckout\wallets\Wallet
+	@see		\harmonypay\autosettlements\Autosettlement
+	@see		\harmonypay\wallets\Wallet
 	@since		2019-02-22 21:40:44
 **/
 trait network_available
@@ -31,22 +31,22 @@ trait network_available
 	{
 		$fs = $form->fieldset( 'fs_network' );
 		// Fieldset legend
-		$fs->legend->label( __( 'Network settings', 'mycryptocheckout' ) );
+		$fs->legend->label( __( 'Network settings', 'harmonypay' ) );
 
 		$form->network_available = $fs->checkbox( 'network_available' )
 			->checked( $this->get_network() )
-			->description( __( 'Do you want this to be available on the whole network?', 'mycryptocheckout' ) )
+			->description( __( 'Do you want this to be available on the whole network?', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Network available', 'mycryptocheckout' ) );
+			->label( __( 'Network available', 'harmonypay' ) );
 
 		$form->network_sites = $fs->select( 'site_ids' )
-			->description( __( 'If not network enabled, on which sites should this be available.', 'mycryptocheckout' ) )
+			->description( __( 'If not network enabled, on which sites should this be available.', 'harmonypay' ) )
 			// Input label
-			->label( __( 'Sites', 'mycryptocheckout' ) )
+			->label( __( 'Sites', 'harmonypay' ) )
 			->multiple()
 			->value( $this->get_sites() );
 
-		foreach( MyCryptoCheckout()->get_sorted_sites() as $site_id => $site_name )
+		foreach( HarmonyPay()->get_sorted_sites() as $site_id => $site_name )
 			$form->network_sites->opt( $site_id, $site_name );
 
 		$form->network_sites->autosize();
@@ -70,12 +70,12 @@ trait network_available
 		if ( ! $this->network )
 		{
 			if ( count( $this->sites ) < 1 )
-				$details []= __( 'Not available on any sites.', 'mycryptocheckout' );
+				$details []= __( 'Not available on any sites.', 'harmonypay' );
 			else
 			{
 				$details []= sprintf(
 					// This wallet is available on SITE1, SITE2, SITE3
-					__( 'Available on %s', 'mycryptocheckout' ),
+					__( 'Available on %s', 'harmonypay' ),
 					implode( ', ', $this->get_site_names() )
 				);
 			}
@@ -113,7 +113,7 @@ trait network_available
 	**/
 	public function maybe_parse_network_form_post( $form )
 	{
-		if ( ! MyCryptoCheckout()->is_network )
+		if ( ! HarmonyPay()->is_network )
 			return;
 		if( ! is_super_admin() )
 			return;

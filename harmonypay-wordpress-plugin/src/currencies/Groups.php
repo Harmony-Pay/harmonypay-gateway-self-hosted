@@ -1,13 +1,13 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 /**
 	@brief		Manage the currency groups.
 	@since		2018-02-23 15:26:33
 **/
 class Groups
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
 	/**
 		@brief		Load all of the groups from this collection of currencies.

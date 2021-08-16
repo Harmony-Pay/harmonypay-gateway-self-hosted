@@ -1,13 +1,13 @@
 <?php
 
-namespace mycryptocheckout\currencies;
+namespace harmonypay\currencies;
 
 /**
 	@brief		The smart currency collection.
 	@since		2017-12-09 19:59:15
 **/
 class Currencies
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
 	/**
 		@brief		Add a currency.

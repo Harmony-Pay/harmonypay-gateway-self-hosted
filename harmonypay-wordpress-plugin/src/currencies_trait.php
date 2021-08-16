@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout;
+namespace harmonypay;
 
 /**
 	@brief		Currency related information.
@@ -32,15 +32,15 @@ trait currencies_trait
 	**/
 	public function init_currencies_trait()
 	{
-		$this->add_action( 'mycryptocheckout_get_currencies', 5 );		// Before everyone else.
-		$this->add_action( 'mycryptocheckout_use_wallet' );
+		$this->add_action( 'harmonypay_get_currencies', 5 );		// Before everyone else.
+		$this->add_action( 'harmonypay_use_wallet' );
 	}
 
 	/**
 		@brief		Load our currencies from the account data.
 		@since		2018-03-11 21:44:32
 	**/
-	public function mycryptocheckout_get_currencies( $action )
+	public function harmonypay_get_currencies( $action )
 	{
 		$currencies = $action->currencies;		// Convenience
 
@@ -52,7 +52,7 @@ trait currencies_trait
 			if ( isset( $currency_data->beta ) )
 				continue;
 
-			$currency = new \mycryptocheckout\currencies\Currency();
+			$currency = new \harmonypay\currencies\Currency();
 
 			// Use everything.
 			foreach( $currency_data as $key => $data )
@@ -70,7 +70,7 @@ trait currencies_trait
 
 			if ( isset( $currency_data->group ) )
 			{
-				$group = new \mycryptocheckout\currencies\Group();
+				$group = new \harmonypay\currencies\Group();
 				$group->name = $currency_data->group;
 				$currency->set_group( $group );
 			}
@@ -80,10 +80,10 @@ trait currencies_trait
 	}
 
 	/**
-		@brief		mycryptocheckout_use_wallet
+		@brief		harmonypay_use_wallet
 		@since		2018-07-01 14:25:15
 	**/
-	public function mycryptocheckout_use_wallet( $action )
+	public function harmonypay_use_wallet( $action )
 	{
 		// Since the currency can't hook anything itself, we have to do it for it.
 		$action->currency->use_wallet( $action );

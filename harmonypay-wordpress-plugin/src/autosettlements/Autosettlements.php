@@ -1,13 +1,13 @@
 <?php
 
-namespace mycryptocheckout\autosettlements;
+namespace harmonypay\autosettlements;
 
 /**
 	@brief		A collection of autosettlement settings.
 	@since		2019-02-21 19:30:16
 **/
 class Autosettlements
-	extends \mycryptocheckout\Collection
+	extends \harmonypay\Collection
 {
 	use \plainview\sdk_mcc\wordpress\object_stores\Site_Option;
 
@@ -75,7 +75,7 @@ class Autosettlements
 	**/
 	public static function store_container()
 	{
-		return MyCryptoCheckout();
+		return HarmonyPay();
 	}
 
 	/**

@@ -6,7 +6,7 @@
 {
     $.fn.extend(
     {
-        mycryptocheckout_sort_wallets : function()
+        harmonypay_sort_wallets : function()
         {
             return this.each( function()
             {
@@ -35,7 +35,7 @@
 						} );
 
 						var data = {
-							'action' : 'mycryptocheckout_sort_wallets',
+							'action' : 'harmonypay_sort_wallets',
 							'nonce' : $this.data( 'nonce' ),
 							'wallets' : wallets,
 						};

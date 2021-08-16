@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\ecommerce\easy_digital_downloads;
+namespace harmonypay\ecommerce\easy_digital_downloads;
 
 use Exception;
 
@@ -9,13 +9,13 @@ use Exception;
 	@since		2018-01-02 15:29:30
 **/
 class Easy_Digital_Downloads
-	extends \mycryptocheckout\ecommerce\Ecommerce
+	extends \harmonypay\ecommerce\Ecommerce
 {
 	/**
 		@brief		Gateway ID.
 		@since		2018-01-02 15:36:17
 	**/
-	public static $gateway_id = 'mycryptocheckout';
+	public static $gateway_id = 'harmonypay';
 
 	/**
 		@brief		Init!
@@ -27,15 +27,15 @@ class Easy_Digital_Downloads
 		$this->add_action( 'edd_add_email_tags' );
 		$this->add_action( 'edd_gateway_' . static::$gateway_id );
 		$this->add_filter( 'edd_gateway_checkout_label', 10, 2 );
-		$this->add_action( 'edd_mycryptocheckout_cc_form' );
+		$this->add_action( 'edd_harmonypay_cc_form' );
 		$this->add_filter( 'edd_payment_gateways' );
 		$this->add_filter( 'edd_settings_gateways' );
 		$this->add_filter( 'edd_settings_sections_gateways' );
 		$this->add_action( 'edd_view_order_details_billing_after' );
-		$this->add_action( 'mycryptocheckout_cancel_payment' );
-		$this->add_action( 'mycryptocheckout_complete_payment' );
-		$this->add_action( 'mycryptocheckout_generate_checkout_javascript_data' );
-		$this->add_action( 'mycryptocheckout_hourly' );
+		$this->add_action( 'harmonypay_cancel_payment' );
+		$this->add_action( 'harmonypay_complete_payment' );
+		$this->add_action( 'harmonypay_generate_checkout_javascript_data' );
+		$this->add_action( 'harmonypay_hourly' );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Easy_Digital_Downloads
 		if ( $tag != 'edd_receipt' )
 			return $output;
 
-		$leave = edd_get_option( 'mcc_leave_edd_receipt_shortcode_alone' );
+		$leave = edd_get_option( 'hrp_leave_edd_receipt_shortcode_alone' );
 		if ( $leave )
 			return $output;
 
@@ -64,17 +64,17 @@ class Easy_Digital_Downloads
 		if ( ! isset( $payment_key ) )
 			return $output;
 
-		if ( $session[ 'gateway' ] != 'mycryptocheckout' )
+		if ( $session[ 'gateway' ] != 'harmonypay' )
 			return $output;
 
 		$payment_id    = edd_get_purchase_id_by_key( $payment_key );
 
-		MyCryptoCheckout()->enqueue_js();
-		MyCryptoCheckout()->enqueue_css();
+		HarmonyPay()->enqueue_js();
+		HarmonyPay()->enqueue_css();
 
 		$instructions = $this->get_option_or_default( 'online_payment_instructions' );
 
-		$payment = MyCryptoCheckout()->api()->payments()->generate_payment_from_order( $payment_id );
+		$payment = HarmonyPay()->api()->payments()->generate_payment_from_order( $payment_id );
 
 		$edd_payment = new \EDD_Payment( $payment_id );
 		if ( $edd_payment->status == 'publish' )
@@ -82,10 +82,10 @@ class Easy_Digital_Downloads
 
 		$this->__current_payment = $payment;		// For the javascript later.
 
-		$instructions = MyCryptoCheckout()->api()->payments()->replace_shortcodes( $payment, $instructions );
+		$instructions = HarmonyPay()->api()->payments()->replace_shortcodes( $payment, $instructions );
 
 		$output = wpautop( $instructions ) . $output;
-		$output .= MyCryptoCheckout()->generate_checkout_js();
+		$output .= HarmonyPay()->generate_checkout_js();
 		return $output;
 	}
 
@@ -107,7 +107,7 @@ class Easy_Digital_Downloads
 		// We only want the first sentence of the instructions desc.
 		$instruction_text = $this->get_option_or_default( 'email_payment_instructions_description' );
 		$instruction_text = preg_replace( '/\..*/', '.', $instruction_text );
-		edd_add_email_tag( 'mcc_instructions', $instruction_text, function( $payment_id )
+		edd_add_email_tag( 'hrp_instructions', $instruction_text, function( $payment_id )
 		{
 			$payment = new \EDD_Payment( $payment_id );
 			// Don't show the payment instructions is the payment is paid.
@@ -115,8 +115,8 @@ class Easy_Digital_Downloads
 				return;
 
 			$instructions = $this->get_option_or_default( 'email_payment_instructions' );
-			$payment = MyCryptoCheckout()->api()->payments()->generate_payment_from_order( $payment_id );
-			$instructions = MyCryptoCheckout()->api()->payments()->replace_shortcodes( $payment, $instructions );
+			$payment = HarmonyPay()->api()->payments()->generate_payment_from_order( $payment_id );
+			$instructions = HarmonyPay()->api()->payments()->replace_shortcodes( $payment, $instructions );
 			return $instructions;
 		} );
 	}
@@ -133,16 +133,16 @@ class Easy_Digital_Downloads
 	}
 
 	/**
-		@brief		edd_gateway_mycryptocheckout
+		@brief		edd_gateway_harmonypay
 		@since		2018-01-02 16:51:54
 	**/
-	public function edd_gateway_mycryptocheckout( $purchase_data )
+	public function edd_gateway_harmonypay( $purchase_data )
 	{
-		$mcc = MyCryptoCheckout();
+		$mcc = HarmonyPay();
 
 		// Handle the currency.
 		$currencies = $mcc->currencies();
-		$currency_id = $purchase_data[ 'post_data' ][ 'mcc_currency_id' ];
+		$currency_id = $purchase_data[ 'post_data' ][ 'hrp_currency_id' ];
 		$currency = $currencies->get( $currency_id );
 		$wallet = $mcc->wallets()->get_dustiest_wallet( $currency_id );
 
@@ -157,21 +157,21 @@ class Easy_Digital_Downloads
 		$precision = $currency->get_decimal_precision();
 
 		$next_amounts = [ $next_amount ];
-		$spread = intval( edd_get_option( 'mcc_payment_amount_spread' ) );
+		$spread = intval( edd_get_option( 'hrp_payment_amount_spread' ) );
 		for( $counter = 0; $counter < $spread ; $counter++ )
 		{
 			// Help find_next_available_amount by increasing the value by 1.
-			$next_amount = MyCryptoCheckout()->increase_floating_point_number( $next_amount, $precision );
+			$next_amount = HarmonyPay()->increase_floating_point_number( $next_amount, $precision );
 			// And now find the next amount.
 			$next_amounts []= $next_amount;
 		}
 
-		MyCryptoCheckout()->debug( 'Next amounts: %s', $next_amounts );
+		HarmonyPay()->debug( 'Next amounts: %s', $next_amounts );
 
 		// Select a next amount at random.
 		$amount = $next_amounts[ array_rand( $next_amounts ) ];
 
-		MyCryptoCheckout()->debug( 'Amount selected: %s', $amount );
+		HarmonyPay()->debug( 'Amount selected: %s', $amount );
 
 		// Good to go.
 
@@ -193,32 +193,32 @@ class Easy_Digital_Downloads
 
 		$payment_id = edd_insert_payment( $edd_payment_data );
 
-		$payment = MyCryptoCheckout()->api()->payments()->create_new( $payment_id );
+		$payment = HarmonyPay()->api()->payments()->create_new( $payment_id );
 		$payment->amount = $amount;
 		$payment->currency_id = $currency_id;
-		$payment->timeout_hours = edd_get_option( 'mcc_payment_timeout_hours' );
+		$payment->timeout_hours = edd_get_option( 'hrp_payment_timeout_hours' );
 
-		$test_mode = edd_get_option( 'mcc_test_mode' );
+		$test_mode = edd_get_option( 'hrp_test_mode' );
 		if ( $test_mode )
 		{
-			MyCryptoCheckout()->debug( 'In test mode. Not creating payment for EDD order %s', $payment_id );
-			$mcc_payment_id = 1;
+			HarmonyPay()->debug( 'In test mode. Not creating payment for EDD order %s', $payment_id );
+			$hrp_payment_id = 1;
 		}
 		else
-			$mcc_payment_id = 0;
+			$hrp_payment_id = 0;
 
-		edd_update_payment_meta( $payment_id, '_mcc_payment_id', $mcc_payment_id );
+		edd_update_payment_meta( $payment_id, '_hrp_payment_id', $hrp_payment_id );
 
 		$wallet->apply_to_payment( $payment );
-		MyCryptoCheckout()->autosettlements()->apply_to_payment( $payment );
+		HarmonyPay()->autosettlements()->apply_to_payment( $payment );
 
 		$mcc->api()->payments()->save( $payment_id, $payment );
 
 		// Only send it if we are not in test mode.
-		if ( $mcc_payment_id < 1 )
-			do_action( 'mycryptocheckout_send_payment', $payment_id );
+		if ( $hrp_payment_id < 1 )
+			do_action( 'harmonypay_send_payment', $payment_id );
 
-		MyCryptoCheckout()->check_for_valid_payment_id( [
+		HarmonyPay()->check_for_valid_payment_id( [
 			'post_id' => $payment_id,
 		] );
 
@@ -227,12 +227,12 @@ class Easy_Digital_Downloads
 	}
 
 	/**
-		@brief		edd_mycryptocheckout_cc_form
+		@brief		edd_harmonypay_cc_form
 		@since		2018-01-02 15:47:24
 	**/
-	public function edd_mycryptocheckout_cc_form()
+	public function edd_harmonypay_cc_form()
 	{
-		$wallet_options = MyCryptoCheckout()->get_checkout_wallet_options( [
+		$wallet_options = HarmonyPay()->get_checkout_wallet_options( [
 			'as_html' => true,
 			'amount' => edd_get_cart_total(),
 			'original_currency' => edd_get_currency(),
@@ -242,8 +242,8 @@ class Easy_Digital_Downloads
 		<fieldset>
 			<legend><?php $this->echo_option_or_default( 'gateway_name' ); ?></legend>
 			<p>
-				<label class="edd-label" for="mcc_currency_id"><?php $this->echo_option_or_default( 'currency_selection_text' ); ?></label>
-				<select id="mcc_currency_id" name="mcc_currency_id" class="mcc_currency_id edd-input required">
+				<label class="edd-label" for="hrp_currency_id"><?php $this->echo_option_or_default( 'currency_selection_text' ); ?></label>
+				<select id="hrp_currency_id" name="hrp_currency_id" class="hrp_currency_id edd-input required">
 					<?php echo $wallet_options; ?>
 				</select>
 			</p>
@@ -260,10 +260,10 @@ class Easy_Digital_Downloads
 	{
 		try
 		{
-			MyCryptoCheckout()->api()->account()->is_available_for_payment();
+			HarmonyPay()->api()->account()->is_available_for_payment();
 
 			$gateways[ static::$gateway_id ] = [
-				'admin_label'    => 'MyCryptoCheckout',
+				'admin_label'    => 'HarmonyPay',
 				// Checkout label for EDD gateway.
 				'checkout_label' => $this->get_option_or_default( 'gateway_name' ),
 			];
@@ -281,7 +281,7 @@ class Easy_Digital_Downloads
 	**/
 	public function edd_settings_sections_gateways( $gateway_sections )
 	{
-		$gateway_sections[ static::$gateway_id ] = 'MyCryptoCheckout';
+		$gateway_sections[ static::$gateway_id ] = 'HarmonyPay';
 		return $gateway_sections;
 	}
 
@@ -291,111 +291,111 @@ class Easy_Digital_Downloads
 	**/
 	public function edd_settings_gateways( $gateway_settings )
 	{
-		$wallets_text = MyCryptoCheckout()->wallets()->build_enabled_string();
+		$wallets_text = HarmonyPay()->wallets()->build_enabled_string();
 		$wallets_text .= "<br/>";
 		$wallets_text .= sprintf(
-			__( "%sConfigure your wallets here.%s", 'mycryptocheckout' ),
-			'<a href="options-general.php?page=mycryptocheckout&tab=currencies">',
+			__( "%sConfigure your wallets here.%s", 'harmonypay' ),
+			'<a href="options-general.php?page=harmonypay&tab=currencies">',
 			'</a>'
 		);
 
 		$settings = array (
-			'mycryptocheckout_settings' =>
+			'harmonypay_settings' =>
 			[
-				'id'   => 'mycryptocheckout_settings',
-				'name' => '<strong>' . __( 'MyCryptoCheckout settings', 'mycryptocheckout' ) . '</strong>',
+				'id'   => 'harmonypay_settings',
+				'name' => '<strong>' . __( 'HarmonyPay settings', 'harmonypay' ) . '</strong>',
 				'type' => 'header',
 			],
 			// Leave this here as a placeholder, since inserting things into arrays at specific places is a pain.
-			'mcc_info_no_wallets' => array(
-				'id'   => 'mcc_info_no_wallets',
+			'hrp_info_no_wallets' => array(
+				'id'   => 'hrp_info_no_wallets',
 				'desc' => '',
 				'type' => 'descriptive_text',
 			),
-			'mcc_info_configure_wallets' => array(
-				'id'   => 'mcc_info_configure_wallets',
+			'hrp_info_configure_wallets' => array(
+				'id'   => 'hrp_info_configure_wallets',
 				'desc' => $wallets_text,
 				'type' => 'descriptive_text',
 			),
-			'mcc_info_defaults' => array(
-				'id'   => 'mcc_info_defaults',
-				'desc' => __( "If left empty, the texts below will use the MyCryptoCheckout defaults.", 'mycryptocheckout' ),
+			'hrp_info_defaults' => array(
+				'id'   => 'hrp_info_defaults',
+				'desc' => __( "If left empty, the texts below will use the HarmonyPay defaults.", 'harmonypay' ),
 				'type' => 'descriptive_text',
 			),
-			'mcc_test_mode' => [
-				'id'	=> 'mcc_test_mode',
+			'hrp_test_mode' => [
+				'id'	=> 'hrp_test_mode',
 				'name'	=> __( 'Test mode', 'woocommerce' ),
 				'type'	=> 'checkbox',
-				'desc'	=> __( 'Allow purchases to be made without sending any payment information to the MyCryptoCheckout API server. No payments will be processed in this mode.', 'mycryptocheckout' ),
+				'desc'	=> __( 'Allow purchases to be made without sending any payment information to the HarmonyPay API server. No payments will be processed in this mode.', 'harmonypay' ),
 			],
-			'mcc_gateway_name' =>
+			'hrp_gateway_name' =>
 			[
-				'id'   => 'mcc_gateway_name',
-				'desc' => __( 'This is the name of the payment gateway as visible to the visitor.', 'mycryptocheckout' ),
-				'name' => __( 'Gateway name', 'mycryptocheckout' ),
+				'id'   => 'hrp_gateway_name',
+				'desc' => __( 'This is the name of the payment gateway as visible to the visitor.', 'harmonypay' ),
+				'name' => __( 'Gateway name', 'harmonypay' ),
 				'size' => 'regular',
 				'type' => 'text',
 			],
-			'mcc_email_payment_instructions' => array(
-				'id' 	=> 'mcc_email_payment_instructions',
-				'name'       => __( 'E-mail instructions', 'mycryptocheckout' ),
+			'hrp_email_payment_instructions' => array(
+				'id' 	=> 'hrp_email_payment_instructions',
+				'name'       => __( 'E-mail instructions', 'harmonypay' ),
 				'type'        => 'textarea',
 				'desc' => $this->get_option_or_default( 'email_payment_instructions_description' ),
 			),
-			'mcc_online_payment_instructions' => array(
-				'id' 	=> 'mcc_online_payment_instructions',
-				'name'       => __( 'Online instructions', 'mycryptocheckout' ),
+			'hrp_online_payment_instructions' => array(
+				'id' 	=> 'hrp_online_payment_instructions',
+				'name'       => __( 'Online instructions', 'harmonypay' ),
 				'type'        => 'textarea',
 				'desc' => $this->get_option_or_default( 'online_payment_instructions_description' ),
 			),
-			'mcc_leave_edd_receipt_shortcode_alone' =>
+			'hrp_leave_edd_receipt_shortcode_alone' =>
 			[
-				'id'   => 'mcc_leave_edd_receipt_shortcode_alone',
-				'desc' => __( "MyCryptoCheckout normally automatically inserts payment instructions into the [edd_receipt] shortcode that is used on the purchase confirmation page.", 'mycryptocheckout' ),
-				'name' => __( 'Do not insert payment instructions into the [edd_receipt] shortcode.', 'mycryptocheckout' ),
+				'id'   => 'hrp_leave_edd_receipt_shortcode_alone',
+				'desc' => __( "HarmonyPay normally automatically inserts payment instructions into the [edd_receipt] shortcode that is used on the purchase confirmation page.", 'harmonypay' ),
+				'name' => __( 'Do not insert payment instructions into the [edd_receipt] shortcode.', 'harmonypay' ),
 				'type' => 'checkbox',
 			],
-			'mcc_currency_selection_text' =>
+			'hrp_currency_selection_text' =>
 			[
-				'id'   => 'mcc_currency_selection_text',
-				'desc' => __( 'This is the text for the currency selection input.', 'mycryptocheckout' ),
-				'name' => __( 'Text for currency selection', 'mycryptocheckout' ),
+				'id'   => 'hrp_currency_selection_text',
+				'desc' => __( 'This is the text for the currency selection input.', 'harmonypay' ),
+				'name' => __( 'Text for currency selection', 'harmonypay' ),
 				'size' => 'regular',
 				'type' => 'text',
 			],
-			'mcc_payment_timeout_hours' =>
+			'hrp_payment_timeout_hours' =>
 			[
-				'id'   => 'mcc_payment_timeout_hours',
+				'id'   => 'hrp_payment_timeout_hours',
 				'default' => 2,
-				'desc' => __( 'How many hours to wait for the payment to come through before marking the order as abandoned.', 'mycryptocheckout' ),
-				'name' => __( 'Payment timeout', 'mycryptocheckout' ),
+				'desc' => __( 'How many hours to wait for the payment to come through before marking the order as abandoned.', 'harmonypay' ),
+				'name' => __( 'Payment timeout', 'harmonypay' ),
 				'size' => 'regular',
 				'type' => 'number',
 				'max' => 72,
 				'min' => 1,
 				'step' => 1,
 			],
-			'mcc_payment_amount_spread' =>
+			'hrp_payment_amount_spread' =>
 			[
-				'id'   => 'mcc_payment_amount_spread',
+				'id'   => 'hrp_payment_amount_spread',
 				'default' => 0,
-				'desc' => __( 'If you are anticipating several purchases a second with the same currency, increase this amount to 100 or more to help prevent duplicate amount payments by slightly increasing the payment at random.', 'mycryptocheckout' ),
-				'name' => __( 'Payment amount spread', 'mycryptocheckout' ),
+				'desc' => __( 'If you are anticipating several purchases a second with the same currency, increase this amount to 100 or more to help prevent duplicate amount payments by slightly increasing the payment at random.', 'harmonypay' ),
+				'name' => __( 'Payment amount spread', 'harmonypay' ),
 				'size' => 'regular',
 				'type' => 'number',
 				'max' => 100,
 				'min' => 0,
 				'step' => 1,
 			],
-			'mcc_reset_to_defaults' => [
-				'id'	=> 'mcc_reset_to_defaults',
-				'name'	=> __( 'Reset to defaults', 'mycryptocheckout' ),
+			'hrp_reset_to_defaults' => [
+				'id'	=> 'hrp_reset_to_defaults',
+				'name'	=> __( 'Reset to defaults', 'harmonypay' ),
 				'type'	=> 'checkbox',
-				'desc'	=> __( 'If you wish to reset all of these settings to the defaults, check this box and save your changes.', 'mycryptocheckout' ),
+				'desc'	=> __( 'If you wish to reset all of these settings to the defaults, check this box and save your changes.', 'harmonypay' ),
 			],
 		);
 
-		if ( edd_get_option( 'mcc_reset_to_defaults' ) )
+		if ( edd_get_option( 'hrp_reset_to_defaults' ) )
 		{
 			global $edd_options;
 
@@ -405,7 +405,7 @@ class Easy_Digital_Downloads
 				edd_delete_option( $key );
 
 				// Yepp. EDD requires a prefix. WC doesn't. Smart WC.
-				$small_key = str_replace( 'mcc_', '', $key );
+				$small_key = str_replace( 'hrp_', '', $key );
 				$default = static::get_gateway_string( $small_key );
 
 				if ( isset( $settings[ $key ][ 'default' ] ) )
@@ -420,19 +420,19 @@ class Easy_Digital_Downloads
 
 		try
 		{
-			MyCryptoCheckout()->api()->account()->is_available_for_payment();
+			HarmonyPay()->api()->account()->is_available_for_payment();
 
 			$gateways[ static::$gateway_id ] = [
-				'admin_label'    => 'MyCryptoCheckout',
+				'admin_label'    => 'HarmonyPay',
 				// Checkout label for EDD gateway.
 				'checkout_label' => $this->get_option_or_default( 'gateway_name' ),
 			];
-			unset( $settings[ 'mcc_info_no_wallets' ] );
+			unset( $settings[ 'hrp_info_no_wallets' ] );
 		}
 		catch ( Exception $e )
 		{
-			$settings[ 'mcc_info_no_wallets' ][ 'desc' ] = sprintf(
-				__( 'Warning! Payments using MyCryptoCheckout are not possible: %s', 'mycryptocheckout' ),
+			$settings[ 'hrp_info_no_wallets' ][ 'desc' ] = sprintf(
+				__( 'Warning! Payments using HarmonyPay are not possible: %s', 'harmonypay' ),
 				$e->getMessage()
 			);
 		}
@@ -451,13 +451,13 @@ class Easy_Digital_Downloads
 		if ( $payment->gateway != static::$gateway_id )
 			return;
 
-		$payment_id = get_post_meta( $post_id, '_mcc_payment_id', true );
+		$payment_id = get_post_meta( $post_id, '_hrp_payment_id', true );
 		if ( $payment_id )
 		{
-			$transaction_id = get_post_meta( $post_id, '_mcc_transaction_id', true );
+			$transaction_id = get_post_meta( $post_id, '_hrp_transaction_id', true );
 			if ( $transaction_id )
 			{
-				$status = __( 'Payment complete', 'mycryptocheckout' );
+				$status = __( 'Payment complete', 'harmonypay' );
 				$transaction_id_span = sprintf( '<span title="%s">%s...</span>',
 					$transaction_id,
 					substr( $transaction_id, 0, 10 )
@@ -467,13 +467,13 @@ class Easy_Digital_Downloads
 			{
 				if ( $payment_id == 1 )
 				{
-					$status = __( 'Test', 'mycryptocheckout' );
-					$transaction_id = __( 'Test', 'mycryptocheckout' );
+					$status = __( 'Test', 'harmonypay' );
+					$transaction_id = __( 'Test', 'harmonypay' );
 				}
 				else
 				{
-					$status = __( 'Awaiting blockchain transaction', 'mycryptocheckout' );
-					$transaction_id = __( 'Pending', 'mycryptocheckout' );
+					$status = __( 'Awaiting blockchain transaction', 'harmonypay' );
+					$transaction_id = __( 'Pending', 'harmonypay' );
 				}
 				$transaction_id_span = sprintf( '<span>%s</span>',
 					$transaction_id
@@ -481,45 +481,45 @@ class Easy_Digital_Downloads
 			}
 		}
 		else
-			$status = __( 'Attempting to contact API server', 'mycryptocheckout' );
+			$status = __( 'Attempting to contact API server', 'harmonypay' );
 
-		$api_payment_id = get_post_meta( $post_id, '_mcc_payment_id', true );
+		$api_payment_id = get_post_meta( $post_id, '_hrp_payment_id', true );
 		switch( $api_payment_id )
 		{
 			case -1:
-				$api_payment_id = __( 'Abandoned', 'mycryptocheckout' );
+				$api_payment_id = __( 'Abandoned', 'harmonypay' );
 			break;
 			case 0:
-				$api_payment_id = __( 'Pending', 'mycryptocheckout' );
+				$api_payment_id = __( 'Pending', 'harmonypay' );
 			break;
 			case 1:
-				$api_payment_id = __( 'Test', 'mycryptocheckout' );
+				$api_payment_id = __( 'Test', 'harmonypay' );
 			break;
 		}
 
 		?>
-		<div id="mcc_payment_details" class="postbox">
-			<h3 class="hndle"><span><?php _e( 'MyCryptoCheckout details', 'mycryptocheckout' ); ?></span></h3>
+		<div id="hrp_payment_details" class="postbox">
+			<h3 class="hndle"><span><?php _e( 'HarmonyPay details', 'harmonypay' ); ?></span></h3>
 			<div class="inside">
-				<div id="mcc_payment_details_inner">
+				<div id="hrp_payment_details_inner">
 					<div class="data column-container">
 						<div class="column">
 							<p>
-								<strong class="mcc_amount"><?php _e( 'Amount', 'mycryptocheckout' ); ?></strong><br/>
-								<span><?php _e( get_post_meta( $post_id, '_mcc_amount', true ) ); ?> <?php _e( get_post_meta( $post_id, '_mcc_currency_id', true ) ); ?></span>
+								<strong class="hrp_amount"><?php _e( 'Amount', 'harmonypay' ); ?></strong><br/>
+								<span><?php _e( get_post_meta( $post_id, '_hrp_amount', true ) ); ?> <?php _e( get_post_meta( $post_id, '_hrp_currency_id', true ) ); ?></span>
 							</p>
 						</div>
 						<div class="column">
 							<p>
-								<strong class="mcc_to"><?php _e( 'To', 'mycryptocheckout' ); ?></strong><br/>
-								<span><?php _e( get_post_meta( $post_id, '_mcc_to', true ) ); ?></span>
+								<strong class="hrp_to"><?php _e( 'To', 'harmonypay' ); ?></strong><br/>
+								<span><?php _e( get_post_meta( $post_id, '_hrp_to', true ) ); ?></span>
 							</p>
 						</div>
 					</div><!-- column-container -->
 					<div class="data column-container">
 						<div class="column">
 							<p>
-								<strong class="mcc_status"><?php _e( 'Status', 'mycryptocheckout' ); ?></strong><br/>
+								<strong class="hrp_status"><?php _e( 'Status', 'harmonypay' ); ?></strong><br/>
 								<span><?php _e( $status ); ?></span>
 							</p>
 						</div>
@@ -528,13 +528,13 @@ class Easy_Digital_Downloads
 					?>
 						<div class="column">
 							<p>
-								<strong class="mcc_payment_id"><?php _e( 'API payment ID', 'mycryptocheckout' ); ?></strong><br/>
+								<strong class="hrp_payment_id"><?php _e( 'API payment ID', 'harmonypay' ); ?></strong><br/>
 								<span><?php _e( $api_payment_id ); ?></span>
 							</p>
 						</div>
 						<div class="column">
 							<p>
-								<strong class="mcc_transaction_id"><?php _e( 'Transaction ID', 'mycryptocheckout' ); ?></strong><br/>
+								<strong class="hrp_transaction_id"><?php _e( 'Transaction ID', 'harmonypay' ); ?></strong><br/>
 								<?php _e( $transaction_id_span ); ?>
 							</p>
 						</div>
@@ -543,8 +543,8 @@ class Easy_Digital_Downloads
 					?>
 						<div class="column">
 							<p>
-								<strong class="mcc_attempts"><?php _e( 'API connection attempts', 'mycryptocheckout' ); ?></strong><br/>
-								<span><?php _e( intval( get_post_meta( $post_id, '_mcc_attempts', true ) ) ); ?></span>
+								<strong class="hrp_attempts"><?php _e( 'API connection attempts', 'harmonypay' ); ?></strong><br/>
+								<span><?php _e( intval( get_post_meta( $post_id, '_hrp_attempts', true ) ) ); ?></span>
 							</p>
 						</div>
 					<?php
@@ -564,7 +564,7 @@ class Easy_Digital_Downloads
 	**/
 	public function get_gateway_string( $key )
 	{
-		return MyCryptoCheckout()->gateway_strings()->get( $key );
+		return HarmonyPay()->gateway_strings()->get( $key );
 	}
 
 	/**
@@ -574,36 +574,36 @@ class Easy_Digital_Downloads
 	public function get_option_or_default( $key )
 	{
 		// Prefix it with mcc because EDD puts all of its settings in one place (!).
-		$r = edd_get_option( 'mcc_' . $key );
+		$r = edd_get_option( 'hrp_' . $key );
 		if ( $r == '' )
 			$r = static::get_gateway_string( $key );
 		return $r;
 	}
 
 	/**
-		@brief		mycryptocheckout_generate_checkout_javascript_data
+		@brief		harmonypay_generate_checkout_javascript_data
 		@since		2018-09-04 09:45:31
 	**/
-	public function mycryptocheckout_generate_checkout_javascript_data( $action )
+	public function harmonypay_generate_checkout_javascript_data( $action )
 	{
 		if ( ! isset( $this->__current_payment ) )
 			return;
 		$payment = $this->__current_payment;
-		MyCryptoCheckout()->api()->payments()->add_to_checkout_javascript_data( $action, $payment );
+		HarmonyPay()->api()->payments()->add_to_checkout_javascript_data( $action, $payment );
 		return $action;
 	}
 
 	/**
-		@brief		mycryptocheckout_hourly
+		@brief		harmonypay_hourly
 		@since		2018-01-02 19:45:08
 	**/
-	public function mycryptocheckout_hourly()
+	public function harmonypay_hourly()
 	{
 		if ( ! function_exists( 'EDD' ) )
 			return;
 		try
 		{
-			MyCryptoCheckout()->api()->payments()->send_unsent_payments();
+			HarmonyPay()->api()->payments()->send_unsent_payments();
 		}
 		catch( Exception $e )
 		{
@@ -615,7 +615,7 @@ class Easy_Digital_Downloads
 		@brief		Payment was abanadoned.
 		@since		2018-01-06 15:59:11
 	**/
-	public function mycryptocheckout_cancel_payment( $action )
+	public function harmonypay_cancel_payment( $action )
 	{
 		$this->do_with_payment_action( $action, function( $action, $order_id )
 		{
@@ -627,18 +627,18 @@ class Easy_Digital_Downloads
 
 			$post = get_post( $order_id );
 			if ( $post->post_status != 'pending' )
-				return MyCryptoCheckout()->debug( 'Unable to mark EDD payment %s on blog %d as abandoned.', $order_id, get_current_blog_id() );
+				return HarmonyPay()->debug( 'Unable to mark EDD payment %s on blog %d as abandoned.', $order_id, get_current_blog_id() );
 
-			MyCryptoCheckout()->debug( 'Marking EDD payment %s on blog %d as abandoned.', $order_id, get_current_blog_id() );
+			HarmonyPay()->debug( 'Marking EDD payment %s on blog %d as abandoned.', $order_id, get_current_blog_id() );
 			edd_update_payment_status( $order_id, 'abandoned' );
 		} );
 	}
 
 	/**
-		@brief		mycryptocheckout_complete_payment
+		@brief		harmonypay_complete_payment
 		@since		2018-01-02 21:54:53
 	**/
-	public function mycryptocheckout_complete_payment( $payment )
+	public function harmonypay_complete_payment( $payment )
 	{
 		$this->do_with_payment_action( $payment, function( $action, $order_id )
 		{
@@ -648,8 +648,8 @@ class Easy_Digital_Downloads
 			// Consider this action finished as soon as we find the order.
 			$action->applied++;
 
-			MyCryptoCheckout()->debug( 'Marking EDD payment %s on blog %d as complete.', $order_id, get_current_blog_id() );
-			update_post_meta( $order_id, '_mcc_transaction_id', $action->payment->transaction_id );
+			HarmonyPay()->debug( 'Marking EDD payment %s on blog %d as complete.', $order_id, get_current_blog_id() );
+			update_post_meta( $order_id, '_hrp_transaction_id', $action->payment->transaction_id );
 			edd_update_payment_status( $order_id, 'publish' );
 		} );
 	}

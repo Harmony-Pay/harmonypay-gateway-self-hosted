@@ -1,0 +1,14 @@
+{
+    "name": "harmonypay/api",
+    "type": "github",
+    "description": "HarmonyPay API for communicating with the API server.",
+    "keywords": ["harmonypay"],
+    "homepage": "https://harmonypay.com/",
+    "license": "GPL-2.0-only",
+    "autoload":
+	{
+		"psr-4": {
+			"harmonypay\\api\\" : "src/"
+		}
+	}
+}

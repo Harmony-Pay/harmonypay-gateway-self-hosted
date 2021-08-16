@@ -1,6 +1,6 @@
 <?php
 
-namespace mycryptocheckout\traits;
+namespace harmonypay\traits;
 
 /**
 	@brief		Provide labelling functions for items / objects.

@@ -1,3 +1,6 @@
 [submodule "wordpress-plugin"]
 	path = wordpress-plugin
 	url = git@github.com:sekmet/harmonypay.git
+[submodule "harmonypay-gateway-app"]
+	path = harmonypay-gateway-app
+	url = git@github.com:sekmet/harmonypay-gateway-app.git

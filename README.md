@@ -1,4 +1,12 @@
-![Harmony ONE Payment Gateway](docs/harmony-one.png)
+<p align="center">
+   <br/>
+   <a href="https://harmonypay.one/" target="_blank"><img width="150px" src="https://github.com/sekmet/harmonypay-gateway/raw/main/docs/ONE.svg" /></a>
+   <h3 align="center">HarmonyPay - Payment Gateway</h3>
+   <p align="center">
+   Accept Harmony ONE and HRC20 Tokens. Peer-to-peer transactions.
+   </p>
+
+</p>
 
 # HarmonyPay - Accept Harmony ONE and HRC20 tokens
 

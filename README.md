@@ -10,7 +10,7 @@
 
 # HarmonyPay - Accept Harmony ONE and HRC20 tokens
 
-## HOW TO INSTRUCTIONS - IN PROGRESS!
+[![asciicast](https://asciinema.org/a/438333.svg)](https://asciinema.org/a/438333)
 
 Cryptocurrency payment gateway for WooCommerce and Easy Digital Downloads. Accept Harmony ONE and HRC20 Tokens. Peer-to-peer transactions.
 
